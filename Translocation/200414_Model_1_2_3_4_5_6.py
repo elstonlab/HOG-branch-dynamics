@@ -302,7 +302,8 @@ def scorefxn1(inits, learned_params):
         odes = simulate_experiment(ss_inits, Hog1_tot, params, time, data_phospho)
         Hog1A = np.interp(time, phospho_time, data_phospho)
         Hog1AN = Hog1A - odes[:,0]
-        error_nuc = np.sum((data_nuc - Hog1AN[closest_idxs_nuc])**2)
+        Hog1N = Hog1AN + odes[:,1]
+        error_nuc = np.sum((data_nuc - Hog1N[closest_idxs_nuc])**2)
         mse_total += error_nuc
 
     return mse_total
