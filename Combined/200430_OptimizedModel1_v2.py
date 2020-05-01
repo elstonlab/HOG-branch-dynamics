@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Apr  3 15:27:15 2020
+#!/usr/bin/env python
 
-@author: Rozemarijn
+# Author: Kimiko Suzuki
+# Date: 181013
+# Notes: python35
 
-v3 -> separate MM for branches
-v4 -> no glycerol dependender feedforward
-"""
+'''
+v2 -> fit to glycerol to try to have cytosolic Hog1 remain cytosolic
+'''
+
 ###################################################################
 #IMPORT PACKAGES
 ###################################################################
@@ -40,6 +41,7 @@ def load_csv_data(folder):
         dose = f_data['Dose'][0]
         doses.append(dose)
         f_data=f_data.set_index('Time')
+        f_data.drop(['Dose'], axis =1)
         f_data = f_data.iloc[:,:3].mean(axis=1)
         f_data = f_data.tolist()
         data.append(f_data)
@@ -264,39 +266,27 @@ def run():
 
 
 def model(initials,t,total_protein,sig,params):
-    Sln1, Sho1, Hog1A, Glycerol = initials
-    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    base_osmo, k1, K1, k2, K2, k3, K3, k4, K4, k5, K5, k6, K6, k7, K7, k8, k10 = params #18
+    Sln1, Sho1, Hog1_AC, Hog1_AN, Hog1_IN, Glycerol = initials
+    Sln1_tot, Sho1_tot, Hog1_tot, _ = total_protein
+    base_osmo, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, K8, k9A, K9a, k9B, K9b, k10, K10, k11, K11, k12, k13, k14 = params #18
 
-    Hog1I = Hog1_tot - Hog1A
+    Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
 
-    # checks for negative glycerol
     if Glycerol < 0:
         Glycerol = 0
 
-    dSln1 = ((base_osmo + sig - Glycerol)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
-    dSho1 = ((base_osmo + sig - Glycerol)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
-    dHog1A = Sln1_on*(k5 * Sln1 * Hog1I / (K5 + Hog1I)) + Sho1_on*(k6 * Sho1 * Hog1I / (K6 + Hog1I)) - k7*Hog1A / (K7 + Hog1A)
-    dGlycerol = k8 * Hog1A - k10 * Glycerol
-    # dGlycerol = k8 * Hog1A  - k10 * Glycerol
+    dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
+    dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
+    dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
+    dHog1_AN = k8 * Hog1_AC / (K8 + Hog1_AC) - k9B * Hog1_AN / (K9b + Hog1_AN) - k10 * Hog1_AN / (K10 + Hog1_AN)
+    dHog1_IN = k10 * Hog1_AN / (K10 + Hog1_AN) - k9A * Hog1_IN / (K9a + Hog1_IN) + k11 * Hog1_IC / (K11 + Hog1_IC)
+    dGlycerol = k12 * Hog1_AC - k13 * Glycerol
 
-    return dSln1, dSho1, dHog1A, dGlycerol
+    return dSln1, dSho1, dHog1_AC, dHog1_AN, dHog1_IN, dGlycerol
 
-def run_wt_ss(inits, total_protein, learned_params):
-    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
-    return ss
-
-def run_sln1_ss(inits, total_protein, learned_params):
-    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, 0
-    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
-    return ss
-
-def run_sho1_ss(inits, total_protein, learned_params):
-    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 0, Sho1_on
+def run_ss(inits, total_protein, learned_params):
     ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
     return ss
 
@@ -304,23 +294,11 @@ def simulate_wt_experiment(inits, total_protein, sig, learned_params, time):
     odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
     return odes
 
-def simulate_sln1_experiment(inits, total_protein, sig, learned_params, time):
-    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, 0
-    #solve odes:
-    odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
-    return odes
-
-def simulate_sho1_experiment(inits, total_protein, sig, learned_params, time):
-    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 0, Sho1_on
-    #solve odes:
-    odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
-    return odes
-
 #############################################################################
 # SCOREFXN
 #############################################################################
+def check_odes(odes):
+    return np.any(np.array(odes) < 0)
 
 def scorefxn1(inits, total_protein, learned_params):
     params = convert_individual(learned_params, arr_conversion_matrix, number_of_params)
@@ -329,105 +307,95 @@ def scorefxn1(inits, total_protein, learned_params):
     steps = 601
     time = np.linspace(0,dt*steps,steps)
 
-    closest_idxs_wt = [np.abs(time - t).argmin() for t in wt_time]
-    closest_idxs_sln1 = [np.abs(time - t).argmin() for t in sln1_time]
-    closest_idxs_sho1 = [np.abs(time - t).argmin() for t in sho1_time]
+    closest_idxs_phospho = [np.abs(time - t).argmin() for t in phospho_time]
+    closest_idxs_nuc = [np.abs(time-t).argmin() for t in nuc_time]
 
     # check if wt steady state exists, returns maximal MSE if not
-    wt_ss_inits = run_wt_ss(inits, total_protein, params)
-    sln1_ss_inits = run_sln1_ss(inits, total_protein, params)
-    sho1_ss_inits = run_sho1_ss(inits, total_protein, params)
+    wt_ss_inits = run_ss(inits, total_protein, params)
+    if (wt_ss_inits < 0).any():
+        return ((63+69+18*2+27)*100)**2
 
-    # checks for impossible values for steady state
-    for ss in [wt_ss_inits, sln1_ss_inits, sho1_ss_inits]:
-        check = total_protein[:-3] - ss[:-1]
-        if (check < 0).any():
-            # print(((9*5)*100)**2)
-            return ((9*5)*100)**2 #if sims were the oppsite of the data (not possible)
+    Hog1_ss = np.sum(wt_ss_inits[2:4])
+    wt_ss_check = np.concatenate([wt_ss_inits[:2], [Hog1_ss]], axis=0)
+    check = total_protein[:-1] - wt_ss_check
+    if (check < 0).any():
+        return ((63+69+18*2+27)*100)**2
 
     mse_total = 0
 
     # WILDTYPE
-    for dose, data_wt in zip(hog1_doses, wt_data):
+    for dose, data_phospho, data_nuc in zip(hog1_doses, wt_phospho_data, wt_nuc_data):
         odes = simulate_wt_experiment(wt_ss_inits, total_protein, dose, params, time)
-        Hog1_wt = odes[:,2]/total_protein[2]*100
-        error_wt = ((data_wt * - Hog1_wt[closest_idxs_wt])**2).mean()
-        mse_total += error_wt
-
-    # Sln1
-    for dose, data_sln1 in zip(hog1_doses, sln1_data):
-        odes = simulate_sln1_experiment(sln1_ss_inits, total_protein, dose, params, time)
-        Hog1_sln1 = odes[:,2]/total_protein[2]*100
-        error_sln1 = ((data_sln1 - Hog1_sln1[closest_idxs_sln1])**2).mean()
-        mse_total += error_sln1
-
-    # Sho1
-    for dose, data_sho1 in zip(hog1_doses, sho1_data):
-        odes = simulate_sho1_experiment(sho1_ss_inits, total_protein, dose, params, time)
-        Hog1_sho1 = odes[:,2]/total_protein[2]*100
-        error_sho1 = ((data_sho1 - Hog1_sho1[closest_idxs_sho1])**2).mean()
-        mse_total += error_sho1
-    # print(mse_total)
+        if check_odes(odes):
+            return ((9*5)*100)**2
+        Hog1_phospho = (odes[:,2]+odes[:,3])/total_protein[2]*100 #calc as a percentage
+        error_phospho = np.sum((data_phospho - Hog1_phospho[closest_idxs_phospho])**2) #sum of squares to keep the same
+        mse_total += error_phospho
+        Hog1_nuc = (odes[:,3]+odes[:,4])/total_protein[2]*100 # percentage
+        error_nuc = np.sum((data_nuc- Hog1_nuc[closest_idxs_nuc])**2) #calc sum of squares since between 0 and 1
+        mse_total += error_nuc
     return mse_total
+
 
 if __name__ == '__main__':
 
     #base filename
-    save_filename = '200429_Model1Sho1ss_v4.txt'
+    save_filename = '200428_OptimizedModel1.txt'
 
     # Paths to longleaf data
-   # base_folder = '/nas/longleaf/home/rvdv/Sho1_branch/'
-    # wt_folder = base_folder + 'WT_phospho'
-    # sln1_folder = base_folder + 'Sln1_phopho'
-    # sho1_folder = base_folder + 'Sho1_phospho'
+    base_folder = '/nas/longleaf/home/rvdv/Prescaled_input/'
+#    base_folder = 'C:/Users/sksuzuki/Downloads/Rozemarijn/Prescaled_input/'
+    wt_phospho_folder = base_folder + 'WT_phospho'
+    wt_nuc_folder = base_folder + '90percent/WT_nuc'
 
     # Paths to local data
-    # base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Sho1_branch/'
-    # base_folder = 'C:/Users/sksuzuki/Downloads/Rozemarijn/Input/'
-    base_folder = '/nas/longleaf/home/sksuzuki/rvdv/Phospho_Input/'
-    wt_folder = base_folder + 'WT_phospho'
-    sln1_folder = base_folder + 'Sln1_phopho'
-    sho1_folder = base_folder + 'Sho1_phospho'
+#    base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_input/'
+#    wt_phospho_folder = base_folder + 'WT_phospho'
+#    wt_nuc_folder = base_folder + '90percent/WT_nuc'
 
     # load experimental data
-    wt_time, wt_data = load_csv_data(wt_folder)
-    sln1_time, sln1_data = load_csv_data(sln1_folder)
-    sho1_time, sho1_data = load_csv_data(sho1_folder)
-
+    phospho_time, wt_phospho_data = load_csv_data(wt_phospho_folder)
+    nuc_time, wt_nuc_data = load_csv_data(wt_nuc_folder)
 
     # Protein concentrations (mM)
     Sln1_tot = molarity_conversion(1176)
     Sho1_tot = molarity_conversion(1534)
     Hog1_tot = molarity_conversion(8225)
-    Sln1_on = 1
-    Sho1_on = 1
-    total_protein = [Sln1_tot, Sho1_tot, Hog1_tot, 0, Sln1_on, Sho1_on] #mM
+    total_protein = [Sln1_tot, Sho1_tot, Hog1_tot, 0] #mM
 
     # initial values
     Sln1 = 0
     Sho1 = 0
-    Hog1A = 0.01 * Hog1_tot
+    Hog1_AC = 0
+    Hog1_AN = 0
+    Hog1_IN = 0.23 * Hog1_tot
     Glycerol = 0.0001
-    inits = [Sln1, Sho1, Hog1A, Glycerol]
+    inits = [Sln1, Sho1, Hog1_AC, Hog1_AN, Hog1_IN, Glycerol]
 
     # doses
     hog1_doses = [150, 350, 550]
 
     # Parameter ranges
-    number_of_params = 17
-    minimums = [1, -4, -4, -4, -4, -4,
-                -4, -4, -4, -4, -4, -4,
-                -4, -4, -4, -4, -4
+    number_of_params = 27
+    minimums = [-8, 0, -4, 0, -8,
+        -4, 0, 0, -8, -8,
+        0, -8, -8, -8, -2,
+        -4, 0, -4, -4, -4,
+        -8, 0, -4, -4, 0,
+        -8, -8
         ]
 
-    maximums = [2, 4, 4, 4, 4, 4,
-                4, 4, 4, 4, 4, 4,
-                4, 4, 4, 4, 4
+    maximums = [0, 8, 6, 8, 0,
+        4, 8, 8, 0, 0,
+        8, 0, 0, 0, 6,
+        4, 8, 4, 4, 4,
+        0, 8, 4, 4, 8,
+        0, 2
         ]
 
     # EA params
-    number_of_runs = 10
-    number_of_generations = 100
+    number_of_runs = 5
+    number_of_generations = 400
     number_of_individuals = 200
     mutation_rate = 0.2
     crossover_rate = 0.5

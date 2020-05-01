@@ -383,7 +383,7 @@ if __name__ == '__main__':
     # Paths to local data
     # base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Sho1_branch/'
     # base_folder = 'C:/Users/sksuzuki/Downloads/Rozemarijn/Input/'
-    base_folder = '/nas/longleaf/home/sksuzuki/rvdv/Phospho_Input/'
+    base_folder = '/nas/longleaf/home/sksuzuki/rvdv/Sho1_branch/'
     wt_folder = base_folder + 'WT_phospho'
     sln1_folder = base_folder + 'Sln1_phopho'
     sho1_folder = base_folder + 'Sho1_phospho'
