@@ -267,7 +267,7 @@ def run():
 
 
 def model(initials,t,total_protein,sig,params):
-    Sln1, Sho1, Hog1_AC, Hog1_AN, Hog1_IN, Glycerol = initials
+    Sln1, Sho1, Hog1_AC, Hog1_AC2, Hog1_AN, Hog1_IN, Glycerol = initials
     Sln1_tot, Sho1_tot, Hog1_tot, _ = total_protein
     base_osmo, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, K8, k9A, K9a, k9B, K9b, k10, K10, k11, K11, k12, k13, k14, k15, k16 = params #18
 
@@ -280,13 +280,13 @@ def model(initials,t,total_protein,sig,params):
 
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
-    dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN) - k15*Hog1_AC
+    dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN) - k15*Hog1_AC + k16 * Hog1_AC2
     dHog1_AC2 = k15*Hog1_AC - k16*Hog1_AC2
     dHog1_AN = k8 * Hog1_AC / (K8 + Hog1_AC) - k9B * Hog1_AN / (K9b + Hog1_AN) - k10 * Hog1_AN / (K10 + Hog1_AN)
     dHog1_IN = k10 * Hog1_AN / (K10 + Hog1_AN) - k9A * Hog1_IN / (K9a + Hog1_IN) + k11 * Hog1_IC / (K11 + Hog1_IC)
     dGlycerol = k12 * Hog1_AC - k13 * Glycerol
 
-    return dSln1, dSho1, dHog1_AC, dHog1_AN, dHog1_IN, dGlycerol
+    return dSln1, dSho1, dHog1_AC, dHog1_AC2, dHog1_AN, dHog1_IN, dGlycerol
 
 def run_ss(inits, total_protein, learned_params):
     ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
@@ -330,10 +330,10 @@ def scorefxn1(inits, total_protein, learned_params):
         odes = simulate_wt_experiment(wt_ss_inits, total_protein, dose, params, time)
         if check_odes(odes):
             return ((9*5)*100)**2
-        Hog1_phospho = (odes[:,2]+odes[:,3])/total_protein[2]*100 #calc as a percentage
+        Hog1_phospho = (odes[:,2]+odes[:,3]+odes[:,4])/total_protein[2]*100 #calc as a percentage
         error_phospho = np.sum((data_phospho - Hog1_phospho[closest_idxs_phospho])**2) #sum of squares to keep the same
         mse_total += error_phospho
-        Hog1_nuc = (odes[:,3]+odes[:,4])/total_protein[2]*100 # percentage
+        Hog1_nuc = (odes[:,4]+odes[:,5])/total_protein[2]*100 # percentage
         error_nuc = np.sum((data_nuc- Hog1_nuc[closest_idxs_nuc])**2) #calc sum of squares since between 0 and 1
         mse_total += error_nuc
     return mse_total
@@ -342,7 +342,7 @@ def scorefxn1(inits, total_protein, learned_params):
 if __name__ == '__main__':
 
     #base filename
-    save_filename = '200428_OptimizedModel1.txt'
+    save_filename = '200430_OptimizedModel1_v3.txt'
 
     # Paths to longleaf data
     base_folder = '/nas/longleaf/home/rvdv/Prescaled_input/'
@@ -369,22 +369,23 @@ if __name__ == '__main__':
     Sln1 = 0
     Sho1 = 0
     Hog1_AC = 0
+    Hog1_AC2 = 0
     Hog1_AN = 0
     Hog1_IN = 0.23 * Hog1_tot
     Glycerol = 0.0001
-    inits = [Sln1, Sho1, Hog1_AC, Hog1_AN, Hog1_IN, Glycerol]
+    inits = [Sln1, Sho1, Hog1_AC, Hog1_AC2, Hog1_AN, Hog1_IN, Glycerol]
 
     # doses
     hog1_doses = [150, 350, 550]
 
     # Parameter ranges
-    number_of_params = 27
+    number_of_params = 29
     minimums = [-8, 0, -4, 0, -8,
         -4, 0, 0, -8, -8,
         0, -8, -8, -8, -2,
         -4, 0, -4, -4, -4,
         -8, 0, -4, -4, 0,
-        -8, -8
+        -8, -8, -4, -4
         ]
 
     maximums = [0, 8, 6, 8, 0,
@@ -392,7 +393,7 @@ if __name__ == '__main__':
         8, 0, 0, 0, 6,
         4, 8, 4, 4, 4,
         0, 8, 4, 4, 8,
-        0, 2
+        0, 2, 4, 4
         ]
 
     # EA params
