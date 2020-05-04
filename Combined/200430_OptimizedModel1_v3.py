@@ -271,7 +271,7 @@ def model(initials,t,total_protein,sig,params):
     Sln1_tot, Sho1_tot, Hog1_tot, _ = total_protein
     base_osmo, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, K8, k9A, K9a, k9B, K9b, k10, K10, k11, K11, k12, k13, k14, k15, k16 = params #18
 
-    Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN - Hog1_Ac2
+    Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN - Hog1_AC2
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
 
