@@ -91,12 +91,12 @@ def get_data(input):
         wt_phospho_folder = base_folder + 'WT_phospho'
         wt_nuc_folder = base_folder + '60percent/WT_nuc'
     elif input == '90perc':
-        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_Input/'
+        base_folder = '../exp_data/Prescaled_Input/'
         wt_phospho_folder = base_folder + 'WT_phospho'
         wt_nuc_folder = base_folder + '90percent/WT_nuc'
     else:
         print('wrong input')
-    
+
 
     # load experimental data
     phospho_time, wt_phospho_data = load_csv_data(wt_phospho_folder)
