@@ -64,136 +64,88 @@ def load_csv_data(folder):
     re_idx = sorted(range(len(doses)), key=lambda k: doses[k])
     data = data[re_idx]
     return time, list(data)
+#
+# def get_data(input):
+#     if input == 'long':
+#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Input/'
+#         wt_phospho_folder = base_folder + 'WT_phospho'
+#         wt_nuc_folder = base_folder + 'WT_nuc'
+#     elif input == 'short':
+#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Inputshort/'
+#         wt_phospho_folder = base_folder + 'WT_phospho'
+#         wt_nuc_folder = base_folder + 'WT_nuc'
+#     elif input == 'norm_max':
+#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/NormalizedInputs/Normalized_Input_max_mean/'
+#         wt_phospho_folder = base_folder + 'WT_phospho'
+#         wt_nuc_folder = base_folder + 'WT_nuc'
+#     elif input == 'norm_ss':
+#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/NormalizedInputs/Normalized_Input_ss_mean/'
+#         wt_phospho_folder = base_folder + 'WT_phospho'
+#         wt_nuc_folder = base_folder + 'WT_nuc'
+#     elif input == '30perc':
+#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_Input/'
+#         wt_phospho_folder = base_folder + 'WT_phospho'
+#         wt_nuc_folder = base_folder + '30percent/WT_nuc'
+#     elif input == '60perc':
+#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_Input/'
+#         wt_phospho_folder = base_folder + 'WT_phospho'
+#         wt_nuc_folder = base_folder + '60percent/WT_nuc'
+#     elif input == '90perc':
+#         base_folder = '../exp_data/Prescaled_Input/'
+#         wt_phospho_folder = base_folder + 'WT_phospho'
+#         wt_nuc_folder = base_folder + '90percent/WT_nuc'
+#     else:
+#         print('wrong input')
+#
+#
+#     # load experimental data
+#     phospho_time, wt_phospho_data = load_csv_data(wt_phospho_folder)
+#     nuc_time, wt_nuc_data = load_csv_data(wt_nuc_folder)
+#
+#     data = [wt_phospho_data, wt_nuc_data]
+#     time = [phospho_time, nuc_time]
+#
+#     return data, time
 
-def get_data(input):
-    if input == 'long':
-        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Input/'
-        wt_phospho_folder = base_folder + 'WT_phospho'
-        wt_nuc_folder = base_folder + 'WT_nuc'
-    elif input == 'short':
-        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Inputshort/'
-        wt_phospho_folder = base_folder + 'WT_phospho'
-        wt_nuc_folder = base_folder + 'WT_nuc'
-    elif input == 'norm_max':
-        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/NormalizedInputs/Normalized_Input_max_mean/'
-        wt_phospho_folder = base_folder + 'WT_phospho'
-        wt_nuc_folder = base_folder + 'WT_nuc'
-    elif input == 'norm_ss':
-        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/NormalizedInputs/Normalized_Input_ss_mean/'
-        wt_phospho_folder = base_folder + 'WT_phospho'
-        wt_nuc_folder = base_folder + 'WT_nuc'
-    elif input == '30perc':
-        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_Input/'
-        wt_phospho_folder = base_folder + 'WT_phospho'
-        wt_nuc_folder = base_folder + '30percent/WT_nuc'
-    elif input == '60perc':
-        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_Input/'
-        wt_phospho_folder = base_folder + 'WT_phospho'
-        wt_nuc_folder = base_folder + '60percent/WT_nuc'
-    elif input == '90perc':
-        base_folder = '../exp_data/Prescaled_Input/'
-        wt_phospho_folder = base_folder + 'WT_phospho'
-        wt_nuc_folder = base_folder + '90percent/WT_nuc'
-    else:
-        print('wrong input')
 
+def calc_sim_score(model_fxns, params, data, exp_time, total_protein, inits):
+    wt_phospho_data, wt_nuc_data = data
+    phospho_time, nuc_time = exp_time
 
-    # load experimental data
-    phospho_time, wt_phospho_data = load_csv_data(wt_phospho_folder)
-    nuc_time, wt_nuc_data = load_csv_data(wt_nuc_folder)
+    hog1_doses = [150, 350,550]
 
-    data = [wt_phospho_data, wt_nuc_data]
-    time = [phospho_time, nuc_time]
-
-    return data, time
-
-
-def calc_sim_score(model_fxns, params, data, exp_time, total_protein, inits, ptpD=True):
-#     params = convert_individual(learned_params, arr_conversion_matrix, number_of_params)
-    mapk_wt_data, mapk_t100a_data, map2k_wt_data, map2k_t100a_data, hog1_ramp_data, mapk_ptpD_data = data
-    # mapk_data_t100a_long = [mapk_t100a_data[0]]
-    mapk_time, mapk_time_t100a_long, mapk_ramp_time = exp_time
-    hog1_doses = [0, 50000, 150000, 250000, 350000, 450000, 550000]
     wt_ss_inits = model.run_ss(model_fxns.m, inits, total_protein, params)
+    if (wt_ss_inits < 0).any():
+        return ((63+69+18*2+27)*100)**2
 
     dt = 0.1
     steps = 601
     time = np.linspace(0,dt*steps,steps)
-    time_long = np.linspace(0,dt*3001,steps)
 
-    closest_idxs_mapk = [np.abs(time - t).argmin() for t in mapk_time]
-    closest_idxs_t100a_long = [np.abs(time_long - t).argmin() for t in mapk_time_t100a_long]
-    closest_idxs_ramp_time = [np.abs(time - t).argmin() for t in mapk_ramp_time]
+    closest_idxs_phospho = [np.abs(time - t).argmin() for t in phospho_time]
+    closest_idxs_nuc = [np.abs(time-t).argmin() for t in nuc_time]
+
+    # check if wt steady state exists, returns maximal MSE if not
+    Hog1_ss = np.sum(wt_ss_inits[2:4])
+    wt_ss_check = np.concatenate([wt_ss_inits[:2], [Hog1_ss]], axis=0)
+    check = total_protein[:-1] - wt_ss_check
+    if (check < 0).any():
+        return ((63+69+18*2+27)*100)**2
 
     mse_total = 0
 
-
     # WILDTYPE
+    for dose, data_phospho, data_nuc in zip(hog1_doses, wt_phospho_data, wt_nuc_data):
+        odes = model.simulate_wt_experiment(model_fxns.m,wt_ss_inits, total_protein, dose, params, time)
+        Hog1_phospho = (odes[:,2]+odes[:,3])/total_protein[2]*100 #calc as a percentage
+        error_phospho = np.sum((data_phospho - Hog1_phospho[closest_idxs_phospho])**2) #sum of squares to keep the same
+        mse_total += error_phospho
+        Hog1_nuc = (odes[:,3]+odes[:,4])/total_protein[2]*100 # percentage
+        error_nuc = np.sum((data_nuc- Hog1_nuc[closest_idxs_nuc])**2) #calc sum of squares since between 0 and 1
+        mse_total += error_nuc
+    return mse_total
 
-    mses = np.zeros(19)
 
-    for i, (dose, data) in enumerate(zip(hog1_doses, mapk_wt_data), 0):
-        odes = model.simulate_wt_experiment(model_fxns.m, wt_ss_inits, total_protein, dose, params, time)#mapk_time)
-        mapk = odes[:,2]/total_protein[2]*100
-        mses[i] = ((data - mapk[closest_idxs_mapk])**2).mean()
-        mse_total += mses[i]
-
-        # Pbs2
-        if dose == 150000:
-            map2k = odes[:,1]/total_protein[1]*100
-            mses[14] = ((map2k_wt_data[0] - map2k[closest_idxs_mapk])**2).mean()
-            mse_total += mses[14]
-        elif dose == 550000:
-            map2k = odes[:,1]/total_protein[1]*100
-            mses[15] = ((map2k_wt_data[1] - map2k[closest_idxs_mapk])**2).mean()
-            mse_total += mses[15]
-#     (mse_total/63)
-
-    # ANALOG SENSITIVE
-    # Hog1
-    for i, (dose, data) in enumerate(zip(hog1_doses, mapk_t100a_data), 7):
-        if dose == 0:
-            odes = model_fxns.t100a(model_fxns.m, wt_ss_inits, total_protein, dose, params, time_long)
-            mapk = odes[:,2]/total_protein[2]*100
-            mses[i] = ((data - mapk[closest_idxs_t100a_long])**2).mean()
-            mse_total += mses[i]
-        else:
-            odes = model_fxns.t100a(model_fxns.m, wt_ss_inits, total_protein, dose, params, time)
-            mapk = odes[:,2]/total_protein[2]*100
-            mses[i] = ((data - mapk[closest_idxs_mapk])**2).mean()
-            mse_total += mses[i]
-            # Pbs2
-            if dose == 150000:
-                map2k = odes[:,1]/total_protein[1]*100
-                mses[16] = ((map2k_t100a_data[0] - map2k[closest_idxs_mapk])**2).mean()
-                mse_total += mses[16]
-            elif dose == 550000:
-                map2k = odes[:,1]/total_protein[1]*100
-                mses[17] = ((map2k_t100a_data[1] - map2k[closest_idxs_mapk])**2).mean()
-                mse_total += mses[17]
-    # print(mses, mse_total)
-#    (mse_total/69)
-
-    # Hog1 ramp
-    for data in hog1_ramp_data:
-        odes = model.simulate_wt_experiment(model_fxns.m, wt_ss_inits, total_protein, 0, params, time, run_type=['ramp'])
-        mapk = odes[:,2]/total_protein[2]*100
-        mses[18] = ((data - mapk[closest_idxs_ramp_time])**2).mean()
-#     (mse_total/13)
-    #     (mse_total/27)
-    return mses
-
-def get_mse_stats(model_fxns, param_sets, total_protein, inits, ptpD=True):
-    data, time = get_data()
-    if ptpD:
-        mses = np.zeros([len(param_sets), 22]) #6
-    else:
-        mses = np.zeros([len(param_sets), 19])
-    # print(mses.size)
-    for i in range(len(param_sets)):
-        mses[i] = calc_sim_score(model_fxns, param_sets[i], data, time, total_protein, inits, ptpD)
-    mses = pd.DataFrame(data=mses) #, columns=['WT Hog1', 'Hog1-as Hog1', 'WT Pbs2', 'Hog1-as Pbs2', 'Ramp', 'Ptp2/3$\Delta$']
-    return mses
 
 def get_saved_thetas(f):
     # df = pd.read_csv(str(f))

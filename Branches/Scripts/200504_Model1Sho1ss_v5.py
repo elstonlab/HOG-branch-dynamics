@@ -7,6 +7,7 @@ Created on Fri Apr  3 15:27:15 2020
 v3 -> separate MM for branches
 v4 -> no glycerol dependender feedforward
 v5 -> added k1 and k2 (unintentionally excluded) to v4
+v7 -> run longer (500 generations)
 """
 ###################################################################
 #IMPORT PACKAGES
@@ -428,8 +429,8 @@ if __name__ == '__main__':
 
     # EA params
     number_of_runs = 10
-    number_of_generations = 100
-    number_of_individuals = 200
+    number_of_generations = 1000
+    number_of_individuals = 250
     mutation_rate = 0.2
     crossover_rate = 0.5
 

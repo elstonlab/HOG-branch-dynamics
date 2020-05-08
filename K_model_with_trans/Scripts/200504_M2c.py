@@ -124,7 +124,7 @@ def molarity_conversion(molecules):
     return molecules/(Na*cell_volume*10**-15)*1000000 # returns uM
 
 # Protein concentrations (uM)
-MAP3K_t = molarity_conversion(123+1207+1611) #ssk2+ssk22+ste11
+MAP3K_t = molarity_conversion(123+1207+1611) #ssk22+ssk2+ste11
 MAP2K_t = molarity_conversion(4076)
 MAPK_t = molarity_conversion(8225)
 PTP_t = molarity_conversion(443+1324) # ptp2+ptp3

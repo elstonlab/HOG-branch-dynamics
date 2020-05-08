@@ -25,8 +25,9 @@ pinks = {0:'#323232', 50000:'#f6ab83', 150000:'#f06043', 250000:'#B3804D', 35000
 palettes = {0:MAP3K_palette,
            1:MAP2K_palette,
            2: MAPK_palette,
-           3:osmo_palette,
-           4:ptp_palette }
+           3:ptp_palette ,
+           4:osmo_palette,
+           'active': MAPK_palette}
 
 x_labels = {0: '% active MAP3K',
           1: '% pp Pbs2',
@@ -121,50 +122,12 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
 #     if params_constants[-1] == 0:
 #         ax1.set_ylim(50,105)
     if ptpD:
-        # for params in top_params[:plt_top]:
-        #     ptpD_total_protein = params_constants[:-2]+[550000*2, 0]
-        #     ptpD_inits = initials[:-1]+[0]
-        #
-        #     ptpD_ss_inits = run_ss(model_fxns.m, ptpD_inits, ptpD_total_protein, params)
-        #     # ptpD_ss_inits = run_ss_ptps(model_fxns.m, initials, params_constants, params)
-        #
-        #     # check = params_constants - ptpD_ss_inits
-        #     # if (check < 0).any():
-        #         # return ((63+69+18*2+27)*100)**2
-        #     # else:
-        #         # mse_total = 0
-        #     ptp_doses = [0, 150000, 350000, 550000]
-        #     plt.rc('xtick', labelsize=20)
-        #     plt.rc('ytick', labelsize=20)
-        #     # for dose, data in zip(doses, mapk_ptp_data):
-        #     for sig in doses:
-        #
-        #         odes = simulate_wt_experiment(model_fxns.m, ptpD_ss_inits, ptpD_total_protein, sig, params, time)
-        #         # odes = simulate_ptpD_experiment(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-        #
-        #         active = odes[:,param]/params_constants[param]*100
-        #         ax1.plot(time, active, color=pinks.get(sig), linewidth=3, alpha=.75)
-        #         # data = model_fxns.t100a(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-        #         data = model_fxns.t100a(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-        #         active = data[:,param]/params_constants[param]*100
-        #         ax2.plot(time, active, '--', color=palette.get(sig))
-        #         ax1.set_ylim(50,100)
-        #         ax1.set_yticks(np.arange(50, 101, step=10))
         for params in top_params[:plt_top]:
-            # ptpD_total_protein = params_constants[:-2]+[550000*2, 0]
-            # ptpD_inits = initials[:-1]+[0]
-
-            # ptpD_ss_inits = run_ptpD_ss_M2c_ptp(model_fxns.m, initials, params_constants, params)
             ptpD_ss_inits = run_ptpD_ss_M3_ptp(model_fxns.m, initials, params_constants, params)
-
-            # ptpD_ss_inits = run_ss_ptps(model_fxns.m, initials, params_constants, params)
 
             check = params_constants - ptpD_ss_inits
             if (check < 0).any():
                 continue
-            # else:
-                # mse_total = 0
-            # ptp_doses = [0, 150000, 350000, 550000]
             ptp_doses = [0]
 
             plt.rc('xtick', labelsize=20)
@@ -184,7 +147,6 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
                 ax2.plot(time, active, '--', color=palette.get(sig))
                 # ax1.set_ylim(50,100)
                 ax1.set_yticks(np.arange(50, 101, step=10))
-
     else:
         # ax1.plot(time, np.zeros(len(time)), color=palette.get(0))
         # ax2.plot(time, np.zeros(len(time)), '--', color=palette.get(0))
@@ -196,8 +158,10 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
                         data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
                     else:
                         data = simulate_wt_experiment(model_fxns.m, initials, params_constants, sig, params, time)
-                    if param == 3:
-                        active = [x/ss_data[3] for x in data[:,param]]
+                    if param == 'active':
+                        active = (data[:,2]+data[:,3])/params_constants[2]*100
+                    elif param == 3:
+                        active = (data[:,3])/params_constants[2]*100
                     else:
                         active = data[:,param]/params_constants[param]*100
                     ax1.plot(time, active, color=palette.get(sig))
@@ -206,8 +170,10 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
                         data = model_fxns.t100a(model_fxns.m, ss_data, params_constants, sig, params, time)
                     else:
                         data = model_fxns.t100a(model_fxns.m, initials, params_constants, sig, params, time)
-                    if param == 3:
-                        active = [x/ss_data[3] for x in data[:,param]]
+                    if param == 'active':
+                        active = (data[:,2]+data[:,3])/params_constants[2]*100
+                    elif param == 3:
+                        active = (data[:,3])/params_constants[2]*100
                     else:
                         active = data[:,param]/params_constants[param]*100
                     ax2.plot(time, active, '--', color=palette.get(sig))
@@ -310,13 +276,13 @@ def plt_mses_gen(gen, mses, idx_top, save_fig=''):
     pal2 = sns.set_palette(colors2)
     ax3.set_xlabel('Generation', fontsize=20)
     for mse in mses[:idx_top]:
-        # ax3.semilogy([x for x in range(gen)], mse[idx][:gen])
-        ax3.plot([x for x in range(gen)], mse[:gen])
+        ax3.semilogy([x for x in range(gen)], mse[:gen])
+        # ax3.plot([x for x in range(gen)], mse[:gen])
     ax3.yaxis.grid(True)
     ax3.set_ylabel('MSE', fontsize=20)
     ax3.set_xlim([0,gen])
     # ax3.set_ylim(1000,5000)
-    ax3.set_ylim([3.5,6])
+    # ax3.set_ylim([3.5,6])
 
     if save_fig:
         plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
@@ -669,14 +635,17 @@ def fit_data_to_list(model_fxns, top_params, params_constants, initials, time, p
                     data = model_fxns.t100a(model_fxns.m, initials, params_constants, dose, params, time)
                 else:
                     data = simulate_wt_experiment(model_fxns.m, initials, params_constants, dose, params, time)
-            if param == 3:
+            # if param == 3:
                 # max_data = np.max(data)
                 # min_data = np.min(data)
                 # active = [(1-0)*(x-min_data)/(max_data-min_data)+0 for x in data]
                 # active = [(x-data[:,param][0])/data[:,param][0] for x in data[:,param]]
                 # active = [(x-ss_data[3])/ss_data[3] for x in data[:,param]]
-                active = [x/ss_data[3] for x in data[:,param]]
-
+                # active = [x/ss_data[3] for x in data[:,param]]
+            if param == 'active':
+                active = (data[:,2]+data[:,3])/params_constants[2]*100
+            elif param == 3:
+                active = (data[:,3])/params_constants[2]*100
             else:
                 active = data[:,param]/params_constants[param]*100
 
@@ -703,11 +672,11 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
 
     palette = palettes.get(param)
 
-
-    if param == 3:
-        dt = 0.1
-        steps = 1801
-        time = np.linspace(0,dt*steps,steps)
+    #
+    # if param == 3:
+    #     dt = 0.1
+    #     steps = 1801
+    #     time = np.linspace(0,dt*steps,steps)
     # elif doses == [0]:
     #     dt = 0.1
     #     steps = 3001

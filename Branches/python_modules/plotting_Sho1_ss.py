@@ -3,7 +3,8 @@ import numpy as np
 from scipy.optimize import fsolve
 from scipy.integrate import odeint
 import seaborn as sns
-from Sho1models_ss import *
+# from Sho1models_ss import *
+from Sho1models_ss_pbs2 import *
 import pandas as pd
 import warnings
 
@@ -38,12 +39,13 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
     plt.rc('ytick', labelsize=20)
     palette = palettes.get(param)
 
+    # if not param == 'gly':
     ax1.set_yticks(np.arange(0, 101, step=25))
     ax1.set_xticks(np.arange(0, 61, step=15))
 
     params = top_params.mean(axis=0)
     for sig, mapk_data in zip(doses, mapk_data):
-            ax1.plot(mapk_time, mapk_data, 'o', markersize=10, color=palette.get(sig), label = str(int(sig/1000))+'mM KCl')
+            ax1.plot(mapk_time, mapk_data, 'o', markersize=10, label = str(int(sig/1000))+'mM KCl') # color=palette.get(sig)
 
 #    if param == 3:
 #        dt = 0.1
@@ -55,24 +57,32 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
 
     for sig in doses:
         for params in top_params[:plt_top]:
-                if Sln1:
-                    sln1_ss_inits = run_sln1_ss(model_fxns.m, initials, params_constants, params)
-                    data = simulate_sln1_experiment(model_fxns.m, sln1_ss_inits, params_constants, sig, params, time)
-                elif Sho1:
-                    sho1_ss_inits = run_sho1_ss(model_fxns.m, initials, params_constants, params)
-                    data = simulate_sho1_experiment(model_fxns.m, sho1_ss_inits, params_constants, sig, params, time)
-                else:
-                    wt_ss_inits = run_wt_ss(model_fxns.m, initials, params_constants, params)
-                    data = simulate_wt_experiment(model_fxns.m, wt_ss_inits, params_constants, sig, params, time)
-                sln1 = data[:,0]/params_constants[0]*100
-                sho1 = data[:,1]/params_constants[1]*100
-                hog1 = (data[:,2])/params_constants[2]*100
-                glycerol = data[:,3]
-                if param == 'phospho':
-                    ax1.plot(time, hog1, color=palette.get(sig))
-                    ax1.set_ylim(0,100)
-                else:
-                    print('wrong param')
+            if Sln1:
+                sln1_ss_inits = run_sln1_ss(model_fxns.m, initials, params_constants, params)
+                data = simulate_sln1_experiment(model_fxns.m, sln1_ss_inits, params_constants, sig, params, time)
+            elif Sho1:
+                sho1_ss_inits = run_sho1_ss(model_fxns.m, initials, params_constants, params)
+                data = simulate_sho1_experiment(model_fxns.m, sho1_ss_inits, params_constants, sig, params, time)
+            else:
+                wt_ss_inits = run_wt_ss(model_fxns.m, initials, params_constants, params)
+                data = simulate_wt_experiment(model_fxns.m, wt_ss_inits, params_constants, sig, params, time)
+            sln1 = data[:,0]/params_constants[0]*100
+            sho1 = data[:,1]/params_constants[1]*100
+            hog1 = (data[:,2])/params_constants[2]*100
+            glycerol = data[:,3]
+            if param == 'sln1':
+                ax1.plot(time, sln1)
+            elif param == 'sho1':
+                ax1.plot(time, sho1)
+                # ax1.set_ylim(0,100)
+            elif param == 'gly':
+                ax1.plot(time, glycerol)
+            elif param == 'phospho':
+                # print(hog1)
+                ax1.plot(time, hog1, color=palette.get(sig))
+                ax1.set_ylim(0,100)
+            else:
+                print('wrong param')
 
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=1)
 
