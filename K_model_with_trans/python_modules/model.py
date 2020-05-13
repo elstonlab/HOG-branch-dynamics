@@ -89,7 +89,40 @@ def M2c_kb_nuc(initials,t,total_protein,sig,params,run_type=None):
 
     dMAP3K = (((sig*k1 + kb)/(1+gly/beta_3))*MAP3K_I)/(K_1+MAP3K_I) - (k2*MAP3K/(K_2+MAP3K))
     dMAP2K = ((k3*MAP3K*MAP2K_I)/(K_3+MAP2K_I)) - (k4*MAP2K/(K_4+MAP2K))
-    dMAPK = (((k5*MAP2K + MAPK*alpha))*MAPK_I)/(K_5+MAPK_I) - (k6*MAPK)/(K_6+MAPK)  - n2*MAPK_n + n1*MAPK
+    dMAPK = (((k5*MAP2K + MAPK*alpha))*MAPK_I)/(K_5+MAPK_I) - (k6*MAPK)/(K_6+MAPK)  + n2*MAPK_n - n1*MAPK
+    dMAPK_n = n1*MAPK - n2*MAPK_n
+    dgly = s7*MAPK - d8*gly
+    return dMAP3K, dMAP2K, dMAPK, dMAPK_n, dgly
+
+def simulate_t100a_experiment_M2c_kb_nuc_ptrans(m, inits, total_protein, sig, learned_params, time,  run_type=None):
+    beta_3, alpha, kb, k1, k3, k5, s7, k2, k4, k6, d8, K_1, K_3, K_5, K_2, K_4, K_6, n1, n2  = learned_params #17
+    learned_params = beta_3, 0, kb, k1, k3, k5, 0, k2, k4, k6, d8, K_1, K_3, K_5, K_2, K_4, K_6, n1, n2
+    #solve odes:
+    odes = odeint(m, inits, time, args=(total_protein, sig, learned_params, run_type))
+    return odes
+
+
+def M2c_kb_nuc_ptrans(initials,t,total_protein,sig,params,run_type=None):
+    # print(initials)
+    if run_type:
+        if run_type[0] == 'ramp':
+            sig = signal_ramp_special(t)
+        elif run_type[0] == 'rand':
+            sig = get_ramp_signal(t, run_type[1])
+        elif run_type[0] == 'man':
+            sig = get_manual_signal(t)
+
+    MAP3K, MAP2K, MAPK, gly, MAPK_n = initials
+    MAP3K_t, MAP2K_t, MAPK_t, _ = total_protein
+    beta_3, alpha, kb, k1, k3, k5, s7, k2, k4, k6, d8, K_1, K_3, K_5, K_2, K_4, K_6, n1, n2 = params #17
+
+    MAP3K_I = MAP3K_t-MAP3K
+    MAP2K_I = MAP2K_t-MAP2K
+    MAPK_I = MAPK_t-MAPK-MAPK_n
+
+    dMAP3K = (((sig*k1 + kb)/(1+gly/beta_3))*MAP3K_I)/(K_1+MAP3K_I) - (k2*MAP3K/(K_2+MAP3K))
+    dMAP2K = ((k3*MAP3K*MAP2K_I)/(K_3+MAP2K_I)) - (k4*MAP2K/(K_4+MAP2K))
+    dMAPK = (((k5*MAP2K + MAPK*alpha))*MAPK_I)/(K_5+MAPK_I) - (k6*MAPK)/(K_6+MAPK)  + n2*MAPK_n - n1*MAPK
     dMAPK_n = n1*MAPK - n2*MAPK_n
     dgly = s7*MAPK - d8*gly
     return dMAP3K, dMAP2K, dMAPK, dMAPK_n, dgly

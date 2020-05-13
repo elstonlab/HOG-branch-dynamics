@@ -9,6 +9,7 @@ v4 -> no glycerol dependender feedforward
 v5 -> added k1 and k2 (unintentionally excluded) to v4
 v7 -> run v5 longer (500 generations), also raised scorefxn threshold to 380250000
 v9 -> moved k1 and k2 (bug fix, added in wrong place)
+v12 -> v09 + wt ss only
 
 """
 ###################################################################
