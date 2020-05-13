@@ -108,3 +108,24 @@ def M7(initials,t,total_protein,sig,params):
     # dGlycerol = k8 * Hog1A  - k10 * Glycerol
 
     return dSln1, dSho1, dHog1A, dGlycerol
+
+def M9(initials,t,total_protein,sig,params):
+    Sln1, Sho1, Hog1A, Glycerol = initials
+    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
+    base_osmo, k1, K1, k2, K2, k3, K3, k4, K4, k5, K5, k6, K6, k7, K7, k8, k10 = params #18
+
+    Hog1I = Hog1_tot - Hog1A
+    Sln1_inactive = Sln1_tot - Sln1
+    Sho1_inactive = Sho1_tot - Sho1
+
+    # checks for negative glycerol
+    if Glycerol < 0:
+        Glycerol = 0
+
+    dSln1 = (base_osmo + k1*sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
+    dSho1 = (base_osmo + k2*sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
+    dHog1A = Sln1_on*(k5 * Sln1 * Hog1I / (K5 + Hog1I)) + Sho1_on*(k6 * Sho1 * Hog1I / (K6 + Hog1I)) - k7*Hog1A / (K7 + Hog1A)
+    dGlycerol = k8 * Hog1A - k10 * Glycerol
+    # dGlycerol = k8 * Hog1A  - k10 * Glycerol
+
+    return dSln1, dSho1, dHog1A, dGlycerol

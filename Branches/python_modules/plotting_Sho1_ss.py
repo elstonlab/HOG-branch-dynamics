@@ -59,12 +59,16 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
         for params in top_params[:plt_top]:
             if Sln1:
                 sln1_ss_inits = run_sln1_ss(model_fxns.m, initials, params_constants, params)
+                print(sln1_ss_inits)
                 data = simulate_sln1_experiment(model_fxns.m, sln1_ss_inits, params_constants, sig, params, time)
             elif Sho1:
                 sho1_ss_inits = run_sho1_ss(model_fxns.m, initials, params_constants, params)
+                print(sho1_ss_inits)
+
                 data = simulate_sho1_experiment(model_fxns.m, sho1_ss_inits, params_constants, sig, params, time)
             else:
                 wt_ss_inits = run_wt_ss(model_fxns.m, initials, params_constants, params)
+                print(wt_ss_inits)
                 data = simulate_wt_experiment(model_fxns.m, wt_ss_inits, params_constants, sig, params, time)
             sln1 = data[:,0]/params_constants[0]*100
             sho1 = data[:,1]/params_constants[1]*100

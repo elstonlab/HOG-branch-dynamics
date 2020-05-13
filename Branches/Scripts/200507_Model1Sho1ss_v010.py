@@ -270,7 +270,7 @@ def run():
 def model(initials,t,total_protein,sig,params):
     Sln1, Sho1, Pbs2A, Hog1A, Glycerol = initials
     Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    b1, b2, k1, K1, k2, K2, k3, K3, k4, K4, k5, K5, k6, K6, k7, K7, k8, k10, k11, K11, k12, K12 = params #18
+    kb1, kb2, b1, b2, k1, K1, k2, K2, k3, K3, k4, K4, k5, K5, k6, K6, k7, K7, k8, k10, k11, K11, k12, K12 = params #18
 
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
@@ -433,14 +433,14 @@ if __name__ == '__main__':
     hog1_doses = [150, 350, 550]
 
     # Parameter ranges
-    number_of_params = 22
-    minimums = [-4, -4, -4, -4, -4, -4, -4,
+    number_of_params = 24
+    minimums = [-4, -4, -4, -4, -4, -4, -4,-4, -4
                 -4, -4, -4, -4,
                 -4, -4, -4, -4, -4, -4,
                 -4, -4, -4, -4, -4
         ]
 
-    maximums = [4, 4, 4, 4, 4, 4, 4,
+    maximums = [4, 4, 4, 4, 4, 4, 4, 4, 4,
                 4, 4, 4, 4,
                 4, 4, 4, 4, 4, 4,
                 4, 4, 4, 4, 4
@@ -448,7 +448,7 @@ if __name__ == '__main__':
 
     # EA params
     number_of_runs = 10
-    number_of_generations = 1000
+    number_of_generations = 500
     number_of_individuals = 250
     mutation_rate = 0.2
     crossover_rate = 0.5
