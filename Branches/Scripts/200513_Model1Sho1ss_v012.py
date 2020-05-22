@@ -11,6 +11,8 @@ v7 -> run longer (500 generations), also raised scorefxn threshold
 v8 -> v7 + Pbs2
 v10 -> v8 + glycerol as hill function
 v12 -> v10 + wt ss only
+v14 -> v12 + added increased pre ss inits
+    -> running locally
 
 """
 ###################################################################
@@ -295,34 +297,32 @@ def model(initials,t,total_protein,sig,params):
 def run_wt_ss(inits, total_protein, learned_params):
     ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
     return ss
-
-def run_sln1_ss(inits, total_protein, learned_params):
-    Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, 0
-    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
-    return ss
-
-def run_sho1_ss(inits, total_protein, learned_params):
-    Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, 0, Sho1_on
-    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
-    return ss
-
 def simulate_wt_experiment(inits, total_protein, sig, learned_params, time):
     odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
     return odes
 
+def run_sln1_ss(inits, total_protein, learned_params):
+    Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
+    total_protein = Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, 1, 0
+    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
+    return ss
 def simulate_sln1_experiment(inits, total_protein, sig, learned_params, time):
     Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, 0
+    total_protein = Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, 1, 0
     #solve odes:
     odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
     return odes
 
+
+def run_sho1_ss(inits, total_protein, learned_params):
+    Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
+    total_protein = Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, 0, 1
+    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
+    return ss
 def simulate_sho1_experiment(inits, total_protein, sig, learned_params, time):
     Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, 0, Sho1_on
-    #solve odes:
+    total_protein = Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, _, 0, 1
+    #solve odes
     odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
     return odes
 
@@ -396,15 +396,15 @@ def scorefxn1(inits, total_protein, learned_params):
 if __name__ == '__main__':
 
     #base filename
-    save_filename = '200513_Model1Sho1ss_v012.txt'
+    save_filename = '200518_Model1Sho1ss_v012.txt'
 
     #longleaf
     base_folder = '/nas/longleaf/home/sksuzuki/rvdv/Sho1_branch/'
     base_folder_2 = '/nas/longleaf/home/sksuzuki/MAPK_activation/'
 
     #local
-    # base_folder = '../exp_data/Sho1_branch/'
-    # base_folder_2 = 'C:/Users/sksuzuki/Desktop/killdevil/data/MAPK_activation/'
+    base_folder = '../exp_data/Sho1_branch/'
+    base_folder_2 = 'C:/Users/sksuzuki/Desktop/killdevil/data/MAPK_activation/'
 
 
     wt_folder = base_folder + 'WT_phospho'
@@ -429,9 +429,9 @@ if __name__ == '__main__':
     total_protein = [Sln1_tot, Sho1_tot, Pbs2_tot, Hog1_tot, 0, Sln1_on, Sho1_on] #mM
 
     # initial values
-    Sln1 = 0
-    Sho1 = 0
-    Pbs2A = 0
+    Sln1 = 0.001 * Sln1_tot
+    Sho1 = 0.001 * Sho1_tot
+    Pbs2A = 0.1 * Pbs2_tot
     Hog1A = 0.01 * Hog1_tot
     Glycerol = 0.0001
     inits = [Sln1, Sho1, Pbs2A, Hog1A, Glycerol]
@@ -441,23 +441,21 @@ if __name__ == '__main__':
 
     # Parameter ranges
     number_of_params = 24
-    minimums = [-4, -4, -4, -4, -4, -4, -4,-4, -4
-                -4, -4, -4, -4,
+    minimums = [-4, -4, -4, -4, -4, -4,
                 -4, -4, -4, -4, -4, -4,
-                -4, -4, -4, -4, -4
-        ]
+                -4, -4, -4, -4, -4, -4,
+                -4, -4, -4, -4, -4, -4]
 
-    maximums = [4, 4, 4, 4, 4, 4, 4, 4, 4,
-                4, 4, 4, 4,
+    maximums = [4, 4, 4, 4, 4, 4,
                 4, 4, 4, 4, 4, 4,
-                4, 4, 4, 4, 4
-        ]
+                4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4]
 
     # EA params
     number_of_runs = 10
     number_of_generations = 500
     number_of_individuals = 250
-    mutation_rate = 0.2
+    mutation_rate = 0.1
     crossover_rate = 0.5
 
     stripped_name, dir_to_use = make_dirs(save_filename)

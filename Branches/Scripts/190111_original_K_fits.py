@@ -1,13 +1,13 @@
-OUTPUT
-
-Filename: 190111_b3_1D_a1_map2k_branches
-Directory: /pine/scr/s/k/sksuzuki/HOG_model/branches/190111_b3_1D_a1_map2k_branches
-Data file: 190111_b3_1D_a1_map2k_branches.txt
-
-Generations: 1000
-Individuals: 250
-Mutation rate: 0.1
-Crossover rate: 0.5
+# OUTPUT
+#
+# Filename: 190111_b3_1D_a1_map2k_branches
+# Directory: /pine/scr/s/k/sksuzuki/HOG_model/branches/190111_b3_1D_a1_map2k_branches
+# Data file: 190111_b3_1D_a1_map2k_branches.txt
+#
+# Generations: 1000
+# Individuals: 250
+# Mutation rate: 0.1
+# Crossover rate: 0.5
 
 
 
@@ -50,27 +50,40 @@ filename = '190111_b3_1D_a1_map2k_branches.txt'
 # sho1DD_folder = 'C:/Users/sksuzuki/Desktop/killdevil/data_pbs2_branches/MAPK activation/sho1DD'
 # ssk1D_folder = 'C:/Users/sksuzuki/Desktop/killdevil/data_pbs2_branches/MAPK activation/ssk1D'
 
-wt_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/WT'
-t100a_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/T100A'
-pbs2_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/Pbs2'
-pbs2_t100a_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/Pbs2_T100A'
-sho1DD_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/sho1DD'
-ssk1D_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/ssk1D'
+# wt_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/WT'
+# t100a_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/T100A'
+# pbs2_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/Pbs2'
+# pbs2_t100a_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/Pbs2_T100A'
+# sho1DD_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/sho1DD'
+# ssk1D_folder = '/nas/longleaf/home/sksuzuki/HOG_model/data_pbs2_branches/MAPK activation/ssk1D'
 
+base_folder = '../exp_data/Sho1_branch/'
+base_folder_2 = 'C:/Users/sksuzuki/Desktop/killdevil/data/MAPK_activation_old/'
+
+
+wt_folder = base_folder_2 + 'WT'
+sho1DD_folder = base_folder_2 + 'sho1DD'
+pbs2_folder = base_folder_2 + 'Pbs2'
+ssk1D_folder = base_folder_2 + 'ssk1D'
+t100a_folder = base_folder_2 + 'T100A'
+pbs2_t100a_folder = base_folder_2 + 'Pbs2_T100A'
 
 def load_csv_data(folder):
     data = []
-    if pathlib.Path(folder):
-        for csv in pathlib.Path(folder).glob('*.csv'):
-            f_data = pd.read_csv(csv)
-            time = f_data['Time'].tolist()
-            f_data=f_data.set_index('Time')
-            f_data = f_data.mean(axis=1)
-            f_data = f_data.tolist()
-            data.append(f_data)
-    else:
-        print("Is not a directory")
-    return time, data
+    doses = []
+    for csv in pathlib.Path(folder).glob('*.csv'):
+        f_data = pd.read_csv(csv)
+        time = f_data['Time'].tolist()
+        # dose = f_data['Dose'][0]
+        # doses.append(dose)
+        f_data=f_data.set_index('Time')
+        f_data = f_data.iloc[:,:3].mean(axis=1)
+        f_data = f_data.tolist()
+        data.append(f_data)
+    data = np.array(data)
+    # re_idx = sorted(range(len(doses)), key=lambda k: doses[k])
+    # data = data[re_idx]
+    return time, list(data)
 
 mapk_time, mapk_wt_data = load_csv_data(wt_folder)
 mapk_time, mapk_t100a_data = load_csv_data(t100a_folder)
@@ -87,7 +100,7 @@ scorefxn_data = [mapk_wt_data, mapk_t100a_data, map2k_wt_data, map2k_t100a_data,
 ###################################################################
 
 number_of_runs = 5
-number_of_generations = 1000
+number_of_generations = 100
 number_of_individuals = 250
 mutation_rate = 0.1
 crossover_rate = 0.5
@@ -302,8 +315,8 @@ def scorefxn1(scorefxn_data, inits, params_constants,
             mse_total += error
 
         else:
-            map2k_wt_data = []
-            map2k_t100a_data = []
+            map2k_wt_data = None
+            map2k_t100a_data = None
 
         for fxn, exp_data, map2k_data in zip([simulate_wt_experiment,simulate_t100a_experiment],
                                                             [MAPK_wt_data, MAPK_t100a_data],
@@ -314,7 +327,7 @@ def scorefxn1(scorefxn_data, inits, params_constants,
             error_active = ((exp_data - active)**2).mean()
             mse_total += error_active
 
-            if map2k_data:
+            if isinstance(map2k_data, list):
                 map2k = data[:,2]/params_constants[2]*100
                 error_map2k = ((map2k_data - map2k)**2).mean()
                 mse_total += error_map2k

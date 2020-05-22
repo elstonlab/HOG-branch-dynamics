@@ -383,7 +383,7 @@ def scorefxn1(inits, total_protein, learned_params):
 if __name__ == '__main__':
 
     #base filename
-    save_filename = 't200513_Model1Sho1ss_v011.txt'
+    save_filename = '200513_Model1Sho1ss_v011.txt'
 
     # Paths to longleaf data
    # base_folder = '/nas/longleaf/home/rvdv/Sho1_branch/'

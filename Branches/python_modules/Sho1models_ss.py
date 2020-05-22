@@ -11,25 +11,17 @@ def run_wt_ss(model, inits, total_protein, learned_params):
     total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 1, 1
     ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
     return ss
-
-def run_sln1_ss(model, inits, total_protein, learned_params):
-    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 1, 0
-    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
-    return ss
-
-def run_sho1_ss(model, inits, total_protein, learned_params):
-    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
-    total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 0, 1
-    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
-    return ss
-
 def simulate_wt_experiment(model, inits, total_protein, sig, learned_params, time):
     Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
     total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 1, 1
     odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
     return odes
 
+def run_sln1_ss(model, inits, total_protein, learned_params):
+    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
+    total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 1, 0
+    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
+    return ss
 def simulate_sln1_experiment(model, inits, total_protein, sig, learned_params, time):
     Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
     total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 1, 0
@@ -37,6 +29,11 @@ def simulate_sln1_experiment(model, inits, total_protein, sig, learned_params, t
     odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
     return odes
 
+def run_sho1_ss(model, inits, total_protein, learned_params):
+    Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
+    total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 0, 1
+    ss = fsolve(model, inits, args=(0,total_protein, 0, learned_params))
+    return ss
 def simulate_sho1_experiment(model, inits, total_protein, sig, learned_params, time):
     Sln1_tot, Sho1_tot, Hog1_tot, _, Sln1_on, Sho1_on = total_protein
     total_protein = Sln1_tot, Sho1_tot, Hog1_tot, _, 0, 1
