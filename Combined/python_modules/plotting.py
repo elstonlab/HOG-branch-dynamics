@@ -25,6 +25,103 @@ x_labels = {'phospho': 'pp Hog1',
 param_colors = {'M16': ['#be202e','#606060', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d', '#851747','#33669a'],
           }
 
+def plt_param_integrals(model_fxns, top_params, plt_top, params_constants, initials,  doses, time, param,
+                        mapk_wt_data=None, mapk_time=None, ss=False, plt_bad=0,
+                        save_fig=''):
+    plt.clf()
+    font = {'family' : 'Arial',
+        'weight' : 'normal',
+        'size'   : 10}
+    plt.rc('font', **font)
+
+    fig, (ax1) = plt.subplots(1, 1, figsize=(3,2.5))
+
+
+    plt.rc('xtick', labelsize=10)
+    plt.rc('ytick', labelsize=10)
+    palette = palettes.get(param)
+
+    # ax1.set_yticks(np.arange(0, 101, step=25))
+    ax1.set_xticks(np.arange(0, 61, step=15))
+
+    if mapk_wt_data:
+        params = top_params.mean(axis=0)
+        for sig, wt_data in zip(doses, mapk_wt_data):
+            ax1.plot(mapk_time, wt_data, 'o', markersize=10, color=palette.get(sig), label = str(int(sig/1000))+'mM KCl')
+
+    # if param == 3:
+    #     dt = 0.1
+    #     steps = 2001
+    #     time = np.linspace(0,dt*steps,steps)
+    # else:
+    #     ax1.set_ylim(0,100)
+
+
+    for sig in doses:
+        if param == 'all Hog1':
+            ss_data = run_ss(model_fxns.m, initials, params_constants, top_params[0:plt_top][-1])
+            data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, top_params[0:plt_top][-1], time)
+            labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+            areas1=np.zeros(601)
+            areas2=np.zeros(601)
+            for i in range(1,601):
+                areas1[i-1]=(data[i-1,2]+data[i,2])*10/params_constants[2]
+                areas2[i-1]=(data[i-1,3]+data[i,3])*10/params_constants[2]
+            integral1=np.zeros((600))
+            integral2=np.zeros((600))
+            integral1[0]=areas1[0]
+            integral2[0]=areas2[0]
+            for j in range(1,600):
+                integral1[j]=areas1[j]+integral1[j-1]
+                integral2[j]=areas2[j]+integral2[j-1]
+            ax1.plot(time[1:], integral1, label = labels[1], color = '#228833', linewidth=2)
+            ax1.plot(time[1:], integral2,  label = labels[2], color = '#4477AA', linewidth=2)
+            ax1.legend(title='Active',loc='best')
+            
+        for params in top_params[0:plt_top]:
+            #                 if ss:
+                ss_data = run_ss(model_fxns.m, initials, params_constants, params)
+#                     data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
+#                 else:
+                data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
+                phospho = (data[:,2]+data[:,3])/params_constants[2]*100
+                nuc = (data[:,3]+data[:,4])/params_constants[2]*100
+                if param == 'phospho':
+                    ax1.plot(time, phospho, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'nuc':
+                    ax1.plot(time, nuc, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                    # ax2.plot(time,data[:,5])
+                elif param == 'sln1':
+                    ax1.plot(time, data[:,0]/params_constants[0]*100, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'sho1':
+                    ax1.plot(time, data[:,1]/params_constants[1]*100, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'all Hog1':
+                    # labels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+                    # labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+                    ax1.plot(time[1:], integral1, label = labels[1], color = '#228833', linewidth=2)
+                    ax1.plot(time[1:], integral2,  label = labels[2], color = '#4477AA', linewidth=2)
+                    # fig.legend([ax1,ax2], labels, loc='center left', bbox_to_anchor=(1, 0.5))
+                    #ax1.set_ylim([-2,102])
+                else:
+                    print('wrong param')
+
+    # ax1.legend(title='Active',loc='best')
+    # ax2.legend(title='Inactive', loc='best')
+    ax1.grid(color='grey', linestyle='-', axis='y', linewidth=1)
+
+
+    if plt_bad:
+        plt_thresh_behavior(model_fxns, top_params, plt_bad, params_constants, initials,  doses, time, param, ax1, ax2)
+
+    if save_fig:
+        plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
+        dpi=300,bbox_inches='tight')
+    plt.show()
+
 def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initials,  doses, time, param,
                         mapk_wt_data=None, mapk_time=None, ss=False, plt_bad=0,
                         save_fig=''):
