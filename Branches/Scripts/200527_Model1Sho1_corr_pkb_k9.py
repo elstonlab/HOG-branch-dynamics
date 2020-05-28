@@ -4,7 +4,7 @@ Created on Fri Apr  3 15:27:15 2020
 
 @author: Kimiko
 
-NOT SUBMITTED
+adding negative feedback to no basal for sho1 model
 """
 ###################################################################
 #IMPORT PACKAGES
@@ -265,7 +265,7 @@ def run():
 def model(initials,t,total_protein,sig,params):
     Sln1, Sho1, Hog1A, Glycerol = initials
     Sln1_tot, Sho1_tot, Hog1_tot, _ = total_protein
-    base_osmo, alpha, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, k9, k10 = params #18
+    base_osmo, beta, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, k9, k10 = params #18
 
     Hog1I = Hog1_tot - Hog1A
     Sln1_inactive = Sln1_tot - Sln1
@@ -274,8 +274,8 @@ def model(initials,t,total_protein,sig,params):
     if Glycerol < 0:
         Glycerol = 0
 
-    dSln1 = ((base_osmo + k1 * sig - Glycerol) + alpha*Hog1A) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
-    dSho1 = ((k2 * sig - Glycerol)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
+    dSln1 = ((base_osmo + k1 * sig - Glycerol)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
+    dSho1 = ((k2 * sig - Glycerol) - beta*Hog1) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1A = (k5 * Sln1 + k6 * Sho1) * Hog1I / (K56 + Hog1I) - k7 * Hog1A / (K7 + Hog1A)
     dGlycerol = k8 * Hog1A + k9*(base_osmo + k1*sig - Glycerol) - k10 * Glycerol
 
@@ -290,15 +290,15 @@ def simulate_wt_experiment(inits, total_protein, sig, learned_params, time):
     return odes
 
 def simulate_sln1_experiment(inits, total_protein, sig, learned_params, time):
-    base_osmo, alpha, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, k9, k10 = learned_params #16
-    learned_params = base_osmo, alpha, k1, K1, 0, 0, k3, K3, 0, 0, k5, 0, K56, k7, K7, k8, k9, k10
+    base_osmo, beta, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, k9, k10 = learned_params #16
+    learned_params = base_osmo, 0, k1, K1, 0, 0, k3, K3, 0, 0, k5, 0, K56, k7, K7, k8, k9, k10
     #solve odes:
     odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
     return odes
 
 def simulate_sho1_experiment(inits, total_protein, sig, learned_params, time):
-    base_osmo, alpha, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, k9, k10 = learned_params #16
-    learned_params = base_osmo, 0, 0, 0, k2, K2, 0, 0, k4, K4, 0, k6, K56, k7, K7, k8, k9, k10
+    base_osmo, beta,k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, k9, k10 = learned_params #16
+    learned_params = base_osmo, beta, 0, 0, k2, K2, 0, 0, k4, K4, 0, k6, K56, k7, K7, k8, k9, k10
     #solve odes:
     odes = odeint(model, inits, time, args=(total_protein, sig, learned_params))
     return odes

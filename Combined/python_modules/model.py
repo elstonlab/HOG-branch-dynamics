@@ -43,7 +43,7 @@ def M16(initials, t, total_protein, salt, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = k1 * (base_osmo + salt - Glycerol) * (Sln1_inactive) - k3 * Sln1
     dSho1 = k2 * (base_osmo + salt - Glycerol) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC
@@ -91,7 +91,7 @@ def M15(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = k1 * (base_osmo + sig - Glycerol) * (Sln1_inactive) - k3 * Sln1
     dSho1 = k2 * (base_osmo + sig - Glycerol) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC
@@ -114,7 +114,7 @@ def M15H(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = (base_osmo + k1 * sig/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = (base_osmo + k2 * sig/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC
@@ -137,7 +137,7 @@ def M15H2(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC
@@ -160,7 +160,7 @@ def M16H(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = (base_osmo + k1 * sig/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = (base_osmo + k2 * sig/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC
@@ -183,7 +183,7 @@ def M16H2(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC
@@ -206,7 +206,7 @@ def M17(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC
@@ -229,7 +229,7 @@ def M18(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + k15 * Hog1_AN
@@ -252,7 +252,7 @@ def M19(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + k15 * Hog1_AN
@@ -275,7 +275,7 @@ def M20(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC
@@ -298,7 +298,7 @@ def M21(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + k15 * Hog1_AN
@@ -321,7 +321,7 @@ def M22(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + k15 * Hog1_AN
@@ -344,7 +344,7 @@ def M22_lin(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = k1 * (base_osmo + sig - Glycerol) * (Sln1_inactive) - k3 * Sln1
     dSho1 = k2 * (base_osmo + sig - Glycerol) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + k15 * Hog1_AN
@@ -367,7 +367,7 @@ def M23(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + (k15 + alpha * Hog1_AN) * Hog1_AN
@@ -390,7 +390,7 @@ def M24(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + (k15 + alpha * Hog1_AC) * Hog1_AN
@@ -413,7 +413,7 @@ def M25(initials, t, total_protein, sig, params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k13 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + (k15 + alpha * (Hog1_AC + Hog1_AN)) * Hog1_AN
@@ -432,7 +432,7 @@ def M26(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - k8 * Hog1_AC + k9 * Hog1_AN
@@ -451,7 +451,7 @@ def M27(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - (k8 + k15 * Hog1_AC) * Hog1_AC + k9B * Hog1_AN
@@ -470,7 +470,7 @@ def M28(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - (k8 + k15 * ((sig)/(1+Glycerol/beta))) * Hog1_AC + k9B * Hog1_AN
@@ -489,7 +489,7 @@ def M29(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - (k8 + k15 * Hog1_AC * ((sig)/(1+Glycerol/beta))) * Hog1_AC + k9B * Hog1_AN
@@ -508,7 +508,7 @@ def M30(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - (k8 + k15 * Hog1_AC) * Hog1_AC + k9 * Hog1_AN
@@ -527,7 +527,7 @@ def M31(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - (k8 + k15 * ((sig)/(1+Glycerol/beta))) * Hog1_AC + k9 * Hog1_AN
@@ -546,7 +546,7 @@ def M32(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - (k8 + k15 * Hog1_AC * ((sig)/(1+Glycerol/beta))) * Hog1_AC + k9 * Hog1_AN
@@ -565,7 +565,7 @@ def M33(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - (k8 + k15 * Hog1_AC * ((sig)/(1+Glycerol/beta))) * Hog1_AC + (k9B + k16 * Hog1_AN) * Hog1_AN
@@ -584,7 +584,7 @@ def M34(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC - k7 * Hog1_AC - (k8 + k15 * Hog1_AC * ((sig)/(1+Glycerol/beta))) * Hog1_AC + (k9 + k16 * Hog1_AN) * Hog1_AN
@@ -603,7 +603,7 @@ def M29MM(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * Hog1_AC * ((sig)/(1+Glycerol/beta))) * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -623,7 +623,7 @@ def M29Pbs2(initials,t,total_protein,sig,params, run_type=None):
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
     Pbs2_inactive = Pbs2_tot - Pbs2
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dPbs2 = (k5 * Sln1 + k6 * Sho1) * Pbs2_inactive - k7 * Pbs2
@@ -644,7 +644,7 @@ def M29Pbs2MM(initials,t,total_protein,sig,params, run_type=None):
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
     Pbs2_inactive = Pbs2_tot - Pbs2
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dPbs2 = (k5 * Sln1 + k6 * Sho1) * Pbs2_inactive / (K56 + Pbs2_inactive) - k7 * Pbs2 / (K7 + Pbs2)
@@ -665,7 +665,7 @@ def M28Pbs2(initials,t,total_protein,sig,params, run_type=None):
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
     Pbs2_inactive = Pbs2_tot - Pbs2
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) - k3 * Sln1
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) - k4 * Sho1
     dPbs2 = (k5 * Sln1 + k6 * Sho1) * Pbs2_inactive - k7 * Pbs2
@@ -686,7 +686,7 @@ def M28Pbs2MM(initials,t,total_protein,sig,params, run_type=None):
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
     Pbs2_inactive = Pbs2_tot - Pbs2
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dPbs2 = (k5 * Sln1 + k6 * Sho1) * Pbs2_inactive / (K56 + Pbs2_inactive) - k7 * Pbs2 / (K7 + Pbs2)
@@ -706,7 +706,7 @@ def M28MM(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * ((sig)/(1+Glycerol/beta))) * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -725,7 +725,7 @@ def M28_2(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = k5 * Sln1 * Hog1_IC / (K5 + Hog1_IC) + k6 * Sho1 * Hog1_IC / (K6 + Hog1_IC) + k14 * Hog1_AC * Hog1_IC / (K14 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * ((sig)/(1+Glycerol/beta))) * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -744,7 +744,7 @@ def M28_3(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = k5 * Sln1 * Hog1_IC / (K5 + Hog1_IC) + k6 * Sho1 * Hog1_IC / (K6 + Hog1_IC) + k14 * Hog1_AC * Hog1_IC / (K14 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * ((sig)/(1+Glycerol/beta))) * Hog1_AC + k9B * Hog1_AN
@@ -763,7 +763,7 @@ def M28MMmin(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-    
+
     dSln1 = ((base_osmo + k1 * sig)/(1+Glycerol/beta)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = ((base_osmo + k2 * sig)/(1+Glycerol/beta)) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -804,7 +804,7 @@ def OM2_impexp(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * sig - Glycerol) * Hog1_AC + k9B * Hog1_AN
@@ -826,7 +826,7 @@ def OM2_Hog1AC(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * Hog1_AC) * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -848,7 +848,7 @@ def OM2_Hog1AC_v2(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * Hog1_AC) * Hog1_AC + k9B * Hog1_AN
@@ -870,7 +870,7 @@ def OM2_Hog1AN(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * Hog1_AN) * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -892,7 +892,7 @@ def OM2_Hog1AN_v2(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * Hog1_AN) * Hog1_AC + k9B * Hog1_AN
@@ -914,7 +914,7 @@ def OM_Sho1imp(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * Sho1) * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -936,7 +936,7 @@ def OM_Sho1imp_2MM(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = k5 * Sln1 * Hog1_IC / (K5 + Hog1_IC) + k6 * Sho1 * Hog1_IC / (K6 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - (k8 + k15 * Sho1) * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -955,7 +955,7 @@ def OM1(initials,t,total_protein,sig,params, run_type=None):
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
-      
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -976,7 +976,7 @@ def OM1_impexp(initials,t,total_protein,sig,params, run_type=None):
     Sln1_inactive = Sln1_tot - Sln1
     Sho1_inactive = Sho1_tot - Sho1
 
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC + k9B * Hog1_AN
@@ -1018,7 +1018,7 @@ def OM1_nopos(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -1040,7 +1040,7 @@ def OM_Hog1ACexp(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + (k9B - k15 * Hog1_AC) * Hog1_AN / (K9b + Hog1_AN)
@@ -1063,7 +1063,7 @@ def OM_Hog1ANexp(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + (k9B - k15 * Hog1_AN) * Hog1_AN / (K9b + Hog1_AN)
@@ -1085,7 +1085,7 @@ def OM_osmoexp(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + (k9B - k15 * sig - Glycerol) * Hog1_AN / (K9b + Hog1_AN)
@@ -1107,7 +1107,7 @@ def OM_Sho1exp(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + (k9B - k15 * Sho1) * Hog1_AN / (K9b + Hog1_AN)
@@ -1129,7 +1129,7 @@ def OM_Hog1ACcomp(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8  * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN) - k15 * Hog1_AC + k16 * Hog1_AC2
@@ -1152,7 +1152,7 @@ def OM_Hog1ANcomp(initials,t,total_protein,sig,params, run_type=None):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8  * Hog1_AC / (K8 + Hog1_AC) + k9B * Hog1_AN / (K9b + Hog1_AN)
@@ -1162,3 +1162,53 @@ def OM_Hog1ANcomp(initials,t,total_protein,sig,params, run_type=None):
     dGlycerol = k12 * Hog1_AC - k13 * Glycerol
 
     return dSln1, dSho1, dHog1_AC, dHog1_AN, dHog1_AN2, dHog1_IN, dGlycerol
+
+
+def OM_Sho1exp_nosln1(initials,t,total_protein,sig,params, run_type=None):
+    Sln1, Sho1, Hog1_AC, Hog1_AN, Hog1_IN, Glycerol = initials
+    Sln1_tot, Sho1_tot, Hog1_tot, _ = total_protein
+    base_osmo, k1, K1, k2, K2, k3, K3, k4, K4, k5, k6, K56, k7, K7, k8, K8, k9A, K9a, k9B, K9b, k10, K10, k11, K11, k12, k13, k14, k15 = params #18
+
+    # k1 = 0
+    # K1 = 0
+    # k3 = 0
+    # K3 = 0
+    # k5 = 0
+
+    Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
+    Sln1_inactive = Sln1_tot - Sln1
+    Sho1_inactive = Sho1_tot - Sho1
+
+    if Glycerol < 0:
+        Glycerol = 0
+    # print(Hog1_IC/Hog1_tot*100)
+
+    dSln1 = 0
+    # dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
+    dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
+    dHog1_AC = (k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + (k9B - k15 * Sho1) * Hog1_AN / (K9b + Hog1_AN)
+    dHog1_AN = k8 * Hog1_AC / (K8 + Hog1_AC) - (k9B - k15 * Sho1) * Hog1_AN / (K9b + Hog1_AN) - k10 * Hog1_AN / (K10 + Hog1_AN)
+    dHog1_IN = k10 * Hog1_AN / (K10 + Hog1_AN) - k9A * Hog1_IN / (K9a + Hog1_IN) + k11 * Hog1_IC / (K11 + Hog1_IC)
+    dGlycerol = k12 * Hog1_AC - k13 * Glycerol
+
+    return dSln1, dSho1, dHog1_AC, dHog1_AN, dHog1_IN, dGlycerol
+
+
+def OM_simp_Sho1exp(initials,t,total_protein,sig,params, run_type=None):
+    Sho1, Hog1_AC, Hog1_AN, Hog1_IN, Glycerol = initials
+    Sho1_tot, Hog1_tot, _ = total_protein
+    base_osmo, k1, K1, k2, K2, k3, K3, k4, K4, k5, K5, k6, K6, k7, K7, k8, K8, k9, K9, k10, k11, k12, k13 = params #23
+
+    Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
+    Sho1_inactive = Sho1_tot - Sho1
+
+    if Glycerol < 0:
+        Glycerol = 0
+
+    dSho1 = (base_osmo + k1 * sig - Glycerol) * (Sho1_inactive) / (K1 + Sho1_inactive) - k2 * Sho1 / (K2 + Sho1)
+    dHog1_AC = (k3 * Sho1 + k12 * Hog1_AC) * Hog1_IC / (K3 + Hog1_IC) - k9 * Hog1_AC / (K9 + Hog1_AC) - k4 * Hog1_AC / (K4 + Hog1_AC) + (k5 - k13 * Sho1) * Hog1_AN / (K5 + Hog1_AN)
+    dHog1_AN = k4 * Hog1_AC / (K4 + Hog1_AC) - (k5 - k13 * Sho1) * Hog1_AN / (K5 + Hog1_AN) - k6 * Hog1_AN / (K6 + Hog1_AN)
+    dHog1_IN = k6 * Hog1_AN / (K6 + Hog1_AN) - k7 * Hog1_IN / (K7 + Hog1_IN) + k8 * Hog1_IC / (K8 + Hog1_IC)
+    dGlycerol = k10 * Hog1_AC - k11 * Glycerol
+
+    return dSho1, dHog1_AC, dHog1_AN, dHog1_IN, dGlycerol

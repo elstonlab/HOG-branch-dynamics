@@ -65,47 +65,47 @@ def load_csv_data(folder):
     data = data[re_idx]
     return time, list(data)
 #
-# def get_data(input):
-#     if input == 'long':
-#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Input/'
-#         wt_phospho_folder = base_folder + 'WT_phospho'
-#         wt_nuc_folder = base_folder + 'WT_nuc'
-#     elif input == 'short':
-#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Inputshort/'
-#         wt_phospho_folder = base_folder + 'WT_phospho'
-#         wt_nuc_folder = base_folder + 'WT_nuc'
-#     elif input == 'norm_max':
-#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/NormalizedInputs/Normalized_Input_max_mean/'
-#         wt_phospho_folder = base_folder + 'WT_phospho'
-#         wt_nuc_folder = base_folder + 'WT_nuc'
-#     elif input == 'norm_ss':
-#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/NormalizedInputs/Normalized_Input_ss_mean/'
-#         wt_phospho_folder = base_folder + 'WT_phospho'
-#         wt_nuc_folder = base_folder + 'WT_nuc'
-#     elif input == '30perc':
-#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_Input/'
-#         wt_phospho_folder = base_folder + 'WT_phospho'
-#         wt_nuc_folder = base_folder + '30percent/WT_nuc'
-#     elif input == '60perc':
-#         base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_Input/'
-#         wt_phospho_folder = base_folder + 'WT_phospho'
-#         wt_nuc_folder = base_folder + '60percent/WT_nuc'
-#     elif input == '90perc':
-#         base_folder = '../exp_data/Prescaled_Input/'
-#         wt_phospho_folder = base_folder + 'WT_phospho'
-#         wt_nuc_folder = base_folder + '90percent/WT_nuc'
-#     else:
-#         print('wrong input')
-#
-#
-#     # load experimental data
-#     phospho_time, wt_phospho_data = load_csv_data(wt_phospho_folder)
-#     nuc_time, wt_nuc_data = load_csv_data(wt_nuc_folder)
-#
-#     data = [wt_phospho_data, wt_nuc_data]
-#     time = [phospho_time, nuc_time]
-#
-#     return data, time
+def get_data(input):
+    if input == 'long':
+        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Input/'
+        wt_phospho_folder = base_folder + 'WT_phospho'
+        wt_nuc_folder = base_folder + 'WT_nuc'
+    elif input == 'short':
+        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Inputshort/'
+        wt_phospho_folder = base_folder + 'WT_phospho'
+        wt_nuc_folder = base_folder + 'WT_nuc'
+    elif input == 'norm_max':
+        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/NormalizedInputs/Normalized_Input_max_mean/'
+        wt_phospho_folder = base_folder + 'WT_phospho'
+        wt_nuc_folder = base_folder + 'WT_nuc'
+    elif input == 'norm_ss':
+        base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/NormalizedInputs/Normalized_Input_ss_mean/'
+        wt_phospho_folder = base_folder + 'WT_phospho'
+        wt_nuc_folder = base_folder + 'WT_nuc'
+    elif input == '30perc':
+        base_folder = '../exp_data/Prescaled_Input/'
+        wt_phospho_folder = base_folder + 'WT_phospho'
+        wt_nuc_folder = base_folder + '30percent/WT_nuc'
+    elif input == '60perc':
+        base_folder = '../exp_data/Prescaled_Input/'
+        wt_phospho_folder = base_folder + 'WT_phospho'
+        wt_nuc_folder = base_folder + '60percent/WT_nuc'
+    elif input == '90perc':
+        base_folder = '../exp_data/Prescaled_Input/'
+        wt_phospho_folder = base_folder + 'WT_phospho'
+        wt_nuc_folder = base_folder + '90percent/WT_nuc'
+    else:
+        print('wrong input')
+
+
+    # load experimental data
+    phospho_time, wt_phospho_data = load_csv_data(wt_phospho_folder)
+    nuc_time, wt_nuc_data = load_csv_data(wt_nuc_folder)
+
+    data = [wt_phospho_data, wt_nuc_data]
+    time = [phospho_time, nuc_time]
+
+    return data, time
 
 
 def calc_sim_score(model_fxns, params, data, exp_time, total_protein, inits):

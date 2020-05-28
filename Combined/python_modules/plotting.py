@@ -11,10 +11,13 @@ phospho_palette = {150:'#8ace88', 350: '#319a50', 550:'#005723'}
 nuc_palette = {150:'#84bcdb', 350: '#196789', 550:'#084082'}
 
 palettes = {'phospho':phospho_palette,
-           'nuc':nuc_palette,
+           'nuc':phospho_palette,
            'nuc2':nuc_palette,
            'nuc3':nuc_palette,
-           'nuc4':nuc_palette}
+           'nuc4':nuc_palette,
+           'sho1':nuc_palette,
+           'sln1':nuc_palette,
+           'all Hog1': phospho_palette}
 
 x_labels = {'phospho': 'pp Hog1',
           'nuc': 'nuc Hog1'}
@@ -28,17 +31,17 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
     plt.clf()
     font = {'family' : 'Arial',
         'weight' : 'normal',
-        'size'   : 20}
+        'size'   : 10}
     plt.rc('font', **font)
 
-    fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(10,4))
+    fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(6,2.5))
 
 
-    plt.rc('xtick', labelsize=20)
-    plt.rc('ytick', labelsize=20)
+    plt.rc('xtick', labelsize=10)
+    plt.rc('ytick', labelsize=10)
     palette = palettes.get(param)
 
-    ax1.set_yticks(np.arange(0, 101, step=25))
+    # ax1.set_yticks(np.arange(0, 101, step=25))
     ax1.set_xticks(np.arange(0, 61, step=15))
 
     if mapk_wt_data:
@@ -46,37 +49,69 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
         for sig, wt_data in zip(doses, mapk_wt_data):
             ax1.plot(mapk_time, wt_data, 'o', markersize=10, color=palette.get(sig), label = str(int(sig/1000))+'mM KCl')
 
-    if param == 3:
-        dt = 0.1
-        steps = 2001
-        time = np.linspace(0,dt*steps,steps)
-    else:
-        ax1.set_ylim(0,100)
-           
+    # if param == 3:
+    #     dt = 0.1
+    #     steps = 2001
+    #     time = np.linspace(0,dt*steps,steps)
+    # else:
+    #     ax1.set_ylim(0,100)
+
 
     for sig in doses:
+        if param == 'all Hog1':
+            ss_data = run_ss(model_fxns.m, initials, params_constants, top_params[0:plt_top][-1])
+            data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, top_params[0:plt_top][-1], time)
+            labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+            ax2.plot(time, (params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100, label = labels[0], color = '#CCBB44', linewidth=2)
+            ax1.plot(time, data[:,2]/params_constants[2]*100, label = labels[1], color = '#228833', linewidth=2)
+            ax1.plot(time, data[:,3]/params_constants[2]*100,  label = labels[2], color = '#4477AA', linewidth=2)
+            ax2.plot(time, data[:,4]/params_constants[2]*100,  label = labels[3], color = '#66CCEE', linewidth=2)
+            ax1.legend(title='Active',loc='best')
+            ax2.legend(title='Inactive', loc='center left', bbox_to_anchor=(1, 0.5))
         for params in top_params[0:plt_top]:
             #                 if ss:
-                #ss_data = run_ss(model_fxns.m, initials, params_constants, params)
+                ss_data = run_ss(model_fxns.m, initials, params_constants, params)
 #                     data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
 #                 else:
-                data = simulate_wt_experiment(model_fxns.m, initials, params_constants, sig, params, time)
+                data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
                 phospho = (data[:,2]+data[:,3])/params_constants[2]*100
                 nuc = (data[:,3]+data[:,4])/params_constants[2]*100
                 if param == 'phospho':
                     ax1.plot(time, phospho, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
                 elif param == 'nuc':
                     ax1.plot(time, nuc, color=palette.get(sig))
-                    ax1.set_ylim([0,100])
-                    ax2.plot(time,data[:,5])
-                else:
-                    print('wrong param')              
+                    ax1.set_ylim([-2,102])
+                    # ax2.plot(time,data[:,5])
+                elif param == 'sln1':
+                    ax1.plot(time, data[:,0]/params_constants[0]*100, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'sho1':
+                    ax1.plot(time, data[:,1]/params_constants[1]*100, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'all Hog1':
+                    # labels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+                    # labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+                    ax2.plot(time, (params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100, label = labels[0], color = '#CCBB44', linewidth=2)
+                    ax1.plot(time, data[:,2]/params_constants[2]*100, label = labels[1], color = '#228833', linewidth=2)
+                    ax1.plot(time, data[:,3]/params_constants[2]*100,  label = labels[2], color = '#4477AA', linewidth=2)
+                    ax2.plot(time, data[:,4]/params_constants[2]*100,  label = labels[3], color = '#66CCEE', linewidth=2)
 
+                    # fig.legend([ax1,ax2], labels, loc='center left', bbox_to_anchor=(1, 0.5))
+                    ax1.set_ylim([-2,102])
+                    ax2.set_ylim([-2,102])
+                else:
+                    print('wrong param')
+
+    # ax1.legend(title='Active',loc='best')
+    # ax2.legend(title='Inactive', loc='best')
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=1)
-       
+    ax2.grid(color='grey', linestyle='-', axis='y', linewidth=1)
+
+
     if plt_bad:
         plt_thresh_behavior(model_fxns, top_params, plt_bad, params_constants, initials,  doses, time, param, ax1, ax2)
-        
+
     if save_fig:
         plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
         dpi=300,bbox_inches='tight')
@@ -119,8 +154,8 @@ def plt_mses_gen(gen, mses_all, idx_top, save_fig=''):
     colors2 = sns.color_palette("Greys", 20)[10:]
     pal2 = sns.set_palette(colors2)
     ax3.set_xlabel('Generation', fontsize=20)
-    mses_all[mses_all[:,-1].argsort()]
-    for mses in mses_all[:idx_top]:
+    mses_all_sort = mses_all[mses_all[:,-1].argsort()]
+    for mses in mses_all_sort[:idx_top]:
         # ax3.semilogy([x for x in range(gen)], mses[:gen]) # for plotting on log scale
         ax3.plot([x for x in range(gen)], mses[:gen])
     ax3.yaxis.grid(True)
@@ -129,7 +164,7 @@ def plt_mses_gen(gen, mses_all, idx_top, save_fig=''):
     # ax3.set_ylim(1000,5000)
 
     if save_fig:
-        plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
+        plt.savefig(save_fig+".png",
         dpi=300,bbox_inches='tight')
     plt.show()
 
@@ -269,9 +304,8 @@ def plt_corr(labelnames, df_top_params, save_fig=''):
     print(so[-10-len(labelnames):-len(labelnames)])
     plt.show()
 
-def plt_rand_behaviors(model_fxns, top_params, plt_top, params_constants, initials, time,
-                            ramp_vals, average, selection='',
-                            save_fig=''):
+
+def plt_rand_behaviors(model_fxns, top_params, plt_top, params_constants, initials, time, ramp_vals, average, selection='', save_fig=''):
     fig, (ax1) = plt.subplots(1, 1, figsize=(9,4))
 
     colors = sns.color_palette("Set2", 10)
@@ -295,6 +329,7 @@ def plt_rand_behaviors(model_fxns, top_params, plt_top, params_constants, initia
         dpi=300,bbox_inches='tight')
     ax1.set_ylim(0,100)
     plt.show()
+
 
 def plt_deriv(mses, zoom, elim, deriv=1, window=False):
     a1 = np.sort(mses)[:elim]
@@ -333,39 +368,53 @@ def plt_idx_vs_mse(mses, zoom, idx_thresh=False):
 
 def fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, dose, ptpD=False,
                         ss = False):
-        sims = []
-        for idx, params in enumerate(top_params): 
-            if ss:
+        if param == 'all Hog1':
+            IC = []
+            AC = []
+            AN = []
+            IN = []
+            for params in top_params:
                 ss_data = run_ss(model_fxns.m, initials, params_constants, params)
                 data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, dose, params, time)
-            else:
-                data = simulate_wt_experiment(model_fxns.m, initials, params_constants, dose, params, time)
-            if param == 'phospho':
-                species = (data[:,2]+data[:,3])/params_constants[2]*100
-            elif param == 'nuc':
-                species = (data[:,3]+data[:,4])/params_constants[2]*100
-            else:
-                print('no data')
-            sims.append(species)
-        print('Dose: ' + str(dose) + ' complete.')
-        return sims
-    
+                IC.append((params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100)
+                AC.append(data[:,2]/params_constants[2]*100)
+                AN.append(data[:,3]/params_constants[2]*100)
+                IN.append(data[:,4]/params_constants[2]*100)
+            return [IC, AC, AN, IN]
+        else:
+            sims = []
+            for idx, params in enumerate(top_params):
+                if ss:
+                    ss_data = run_ss(model_fxns.m, initials, params_constants, params)
+                    data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, dose, params, time)
+                else:
+                    data = simulate_wt_experiment(model_fxns.m, initials, params_constants, dose, params, time)
+                if param == 'phospho':
+                    species = (data[:,2]+data[:,3])/params_constants[2]*100
+                elif param == 'nuc':
+                    species = (data[:,3]+data[:,4])/params_constants[2]*100
+                else:
+                    print('no data')
+                sims.append(species)
+            print('Dose: ' + str(dose) + ' complete.')
+            return sims
+
 def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, time, param,
                         exp_data=None, exp_time=None, ss=False, ptpD=False, ci= 95,
                         save_fig=''):
     plt.clf()
     font = {'family' : 'Arial',
         'weight' : 'normal',
-        'size'   : 16}
+        'size'   : 12}
     plt.rc('font', **font)
 
     if save_fig:
-        fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
+        fig, (ax1) = plt.subplots(1, 1, figsize=(4,2))
     else:
         fig, (ax1) = plt.subplots(1, 1, figsize=(5,3))
 
-    plt.rc('ytick', labelsize=16)
-    plt.rc('xtick', labelsize=16)
+    plt.rc('ytick', labelsize=12)
+    plt.rc('xtick', labelsize=12)
 
     palette = palettes.get(param)
 
@@ -390,7 +439,7 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                 4: ['full']}
     if exp_data:
         params = top_params.mean(axis=0)
-        for sig, data in zip(doses, exp_data):
+        for sig, data in zip(doses, exp_data[::-1]):
                 if sig == 0:
                     mark = 'o'
                 elif sig == 150:
@@ -399,14 +448,25 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                     mark = 's'
                 else:
                     mark = 'o'
-                ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
-                if param == 'nuc':
-                    ax1.set_ylim([0,100])
-                    ax1.set_xlim([-2, 61])
-                else:
-                    ax1.set_ylim([0,100])
+                ax1.plot(exp_time, data, marker=mark, markersize=6,  linestyle="None", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge), linestyle="-",
+                # if param == 'nuc':
+                    # ax1.set_ylim([0,100])
+                    # ax1.set_xlim([-2, 61])
+                # else:
+                    # ax1.set_ylim([0,100])
 
 
+    ax1.set_ylim(21,65)
+    # ax1.set_ylim(-5,105)
+
+    # ax1.set_xlim(-1,31)
+    ax1.set_xlim(-2,61)
+
+    ax1.set_yticks(np.arange(20, 61, step=10))
+    # ax1.set_yticks(np.arange(0, 101, step=25))
+
+    # ax1.set_xticks(np.arange(0, 31, step=10))
+    ax1.set_xticks(np.arange(0, 61, step=15))
 
 
 
@@ -431,12 +491,171 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
     ax1.spines['right'].set_visible(False)
     ax1.spines['top'].set_visible(False)
-    ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+    ax1.legend(title='KCl (mM)',bbox_to_anchor=[1, 0.5], loc='best')
 
     if save_fig:
-        plt.savefig(save_fig+".pdf", dpi=300,bbox_inches='tight')
+        plt.savefig(save_fig, dpi=300,bbox_inches='tight')
 
     plt.show()
+
+
+
+
+
+def plt_all_hog1_cis(model_fxns, top_params, params_constants, initials,  sig, time, param,
+                        exp_data=None, exp_time=None, ss=False, ptpD=False, ci= 95,
+                        save_fig=''):
+    plt.clf()
+    font = {'family' : 'Arial',
+        'weight' : 'normal',
+        'size'   : 10}
+    plt.rc('font', **font)
+
+    if save_fig:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
+    else:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(5,3))
+
+    plt.rc('ytick', labelsize=10)
+    plt.rc('xtick', labelsize=10)
+
+    palette = palettes.get(param)
+
+    llabels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+
+
+    # dashes = None
+    # if t100a:
+    dashes= (2,2)
+
+    sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
+    # for sim in sims:
+    ax1 = sns.tsplot(sims[0], time,  ci = ci, dashes = dashes, color = '#CCBB44')
+    ax1 = sns.tsplot(sims[1], time,  ci = ci, dashes = dashes, color = '#228833')
+
+    ax1 = sns.tsplot(sims[2], time,  ci = ci, dashes = dashes, color = '#4477AA')
+    ax1 = sns.tsplot(sims[3], time,  ci = ci, dashes = dashes, color = '#66CCEE')
+
+    # ax1.legend(labels=labels, title='Active',loc='best')
+    plt.legend(labels=llabels, title='Hog1', loc='center left', bbox_to_anchor=(1, 0.5))
+    # plt.legend(labels=labels, title='Active', loc='center left', bbox_to_anchor=(0.5, 0.5))
+
+
+
+    ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+    # ax.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+
+    ax1.spines['right'].set_visible(False)
+    ax1.spines['top'].set_visible(False)
+    # ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+    ax1.set_ylim(-2,102)
+
+    if sig == 150:
+        ax1.set_xlim(-1,21)
+    elif sig == 350:
+        ax1.set_xlim(-1.5,45)
+    elif sig == 550:
+        ax1.set_xlim(-1.5,60)
+
+    if save_fig:
+        plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
+
+    plt.show()
+
+def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, time, param,
+                        exp_data=None, exp_time=None, ss=False, ptpD=False, ci= 95,
+                        save_fig=''):
+    plt.clf()
+    font = {'family' : 'Arial',
+        'weight' : 'normal',
+        'size'   : 10}
+    plt.rc('font', **font)
+
+    if save_fig:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
+    else:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(5,3))
+
+    plt.rc('ytick', labelsize=10)
+    plt.rc('xtick', labelsize=10)
+
+    palette = palettes.get(param)
+
+    # llabels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+
+
+    # dashes = None
+    # if t100a:
+    dashes= (2,2)
+
+    sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
+    # for sim in sims:
+    # ax1 = sns.tsplot(sims[0], time,  ci = ci, dashes = dashes, color = '#CCBB44')
+
+    # active v active
+    # ax1.plot(np.average(sims[1], axis=0), np.average(sims[2], axis=0),  color = '#228833')
+    # print(len(np.average(sims[0]+sims[1], axis=0)))
+    # nuc vs cytos
+    closest_idxs = [np.abs(time - t).argmin() for t in exp_time]
+
+    IC = np.average(sims[0], axis=0)[closest_idxs]
+    AC = np.average(sims[1], axis=0)[closest_idxs]
+    AN = np.average(sims[2], axis=0)[closest_idxs]
+    IN = np.average(sims[3], axis=0)[closest_idxs]
+    # print(IC+AC)
+    # print(len(IC+AC))
+    ax1.plot(AN+AC, AN+IN,  '-', color = '#414042' )
+    if sig ==150:
+        m = 'd'
+    elif sig ==350:
+        m = 'o'
+    elif sig ==550:
+        m = 's'
+    else:
+        m = 'o'
+    ax1.plot(AN+AC, AN+IN,  m, color = palette.get(sig),mec='black' )
+
+
+    ax1.set_ylim(19,61)
+    # ax1.set_ylim(-5,105)
+
+    # ax1.set_xlim(-1,31)
+    ax1.set_xlim(-1,102)
+
+    ax1.set_yticks(np.arange(10, 61, step=10))
+    # ax1.set_yticks(np.arange(0, 101, step=25))
+
+    # ax1.set_xticks(np.arange(0, 31, step=10))
+    ax1.set_xticks(np.arange(0, 105, step=25))
+    # ax1 = sns.tsplot(sims[2], time,  ci = ci, dashes = dashes, color = '#4477AA')
+    # ax1 = sns.tsplot(sims[3], time,  ci = ci, dashes = dashes, color = '#66CCEE')
+
+    # ax1.legend(labels=labels, title='Active',loc='best')
+    # plt.legend(labels=llabels, title='Hog1', loc='center left', bbox_to_anchor=(1, 0.5))
+    # plt.legend(labels=labels, title='Active', loc='center left', bbox_to_anchor=(0.5, 0.5))
+
+
+
+    ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+    ax1.grid(color='grey', linestyle='-', axis='x', linewidth=.5)
+
+    ax1.spines['right'].set_visible(False)
+    ax1.spines['top'].set_visible(False)
+    # ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+    # ax1.set_ylim(-2,102)
+
+    # if sig == 150:
+    #     ax1.set_xlim(-1,21)
+    # elif sig == 350:
+    #     ax1.set_xlim(-1.5,45)
+    # elif sig == 550:
+    #     ax1.set_xlim(-1.5,60)
+
+    if save_fig:
+        plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
+
+    plt.show()
+
 
 
 def simdata_to_list(model_fxns, top_params, params_constants, initials, time, param,
@@ -500,9 +719,3 @@ def inhibdata_to_list(model_fxns, top_params, params_constants, initials, time, 
         if idx % int(len(top_params)*.1) == 0:
             print(str(int(idx/len(top_params)*100)) + "% complete.")
     return sims
-
-
-
-
-
-
