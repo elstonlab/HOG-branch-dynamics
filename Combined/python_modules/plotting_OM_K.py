@@ -8,7 +8,7 @@ import pandas as pd
 import warnings
 
 phospho_palette = {150:'#8ace88', 350: '#319a50', 550:'#005723'}
-nuc_palette = {150:'#84bcdb', 350: '#196789', 550:'#084082'}
+nuc_palette = {150:'#84bcdb', 350: '#vvv', 550:'#084082'}
 
 palettes = {'phospho':phospho_palette,
            'nuc':nuc_palette,
@@ -594,10 +594,29 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
     IN = np.average(sims[3], axis=0)[closest_idxs]
     # print(IC+AC)
     # print(len(IC+AC))
-    ax1.plot(AN+AC, AN+IN,  'o-',color = '#228833')
+    ax1.plot(AN+AC, AN+IN,  '-', color = '#414042' )
+    if sig ==150:
+        m = 'd'
+    elif sig ==350:
+        m = 'o'
+    elif sig ==550:
+        m = 's'
+    else:
+        m = 'o'
+    ax1.plot(AN+AC, AN+IN,  m, color = palette.get(sig),mec='black' )
 
 
+    ax1.set_ylim(22,31)
+    # ax1.set_ylim(-5,105)
 
+    # ax1.set_xlim(-1,31)
+    ax1.set_xlim(-1,102)
+
+    ax1.set_yticks(np.arange(22, 31, step=2))
+    # ax1.set_yticks(np.arange(0, 101, step=25))
+
+    # ax1.set_xticks(np.arange(0, 31, step=10))
+    ax1.set_xticks(np.arange(0, 105, step=25))
     # ax1 = sns.tsplot(sims[2], time,  ci = ci, dashes = dashes, color = '#4477AA')
     # ax1 = sns.tsplot(sims[3], time,  ci = ci, dashes = dashes, color = '#66CCEE')
 
@@ -608,7 +627,7 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
 
 
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
-    # ax.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+    ax1.grid(color='grey', linestyle='-', axis='x', linewidth=.5)
 
     ax1.spines['right'].set_visible(False)
     ax1.spines['top'].set_visible(False)

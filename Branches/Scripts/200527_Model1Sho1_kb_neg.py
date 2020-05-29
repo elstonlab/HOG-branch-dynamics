@@ -275,7 +275,7 @@ def model(initials,t,total_protein,sig,params):
         Glycerol = 0
 
     dSln1 = ((base_osmo + k1 * sig - Glycerol)) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
-    dSho1 = ((k2 * sig - Glycerol) - beta*Hog1) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
+    dSho1 = ((k2 * sig - Glycerol) - beta*Hog1A) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1A = (k5 * Sln1 + k6 * Sho1) * Hog1I / (K56 + Hog1I) - k7 * Hog1A / (K7 + Hog1A)
     dGlycerol = k8 * Hog1A + k9*(base_osmo + k1*sig - Glycerol) - k10 * Glycerol
 
