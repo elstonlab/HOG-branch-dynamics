@@ -77,6 +77,8 @@ def plt_param_integrals(model_fxns, top_params, plt_top, params_constants, initi
             ax1.plot(time[1:], integral1, label = labels[1], color = '#228833', linewidth=2)
             ax1.plot(time[1:], integral2,  label = labels[2], color = '#4477AA', linewidth=2)
             ax1.legend(title='Active',loc='best')
+            ax1.set_ylim([0,300])
+            ax1.set_xlim([0,5])
             
         for params in top_params[0:plt_top]:
             #                 if ss:
