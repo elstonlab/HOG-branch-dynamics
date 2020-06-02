@@ -8,7 +8,7 @@ import pandas as pd
 import warnings
 
 phospho_palette = {150:'#8ace88', 350: '#319a50', 550:'#005723'}
-nuc_palette = {150:'#84bcdb', 350: '#vvv', 550:'#084082'}
+nuc_palette = {150:'#84bcdb', 350: '#196789', 550:'#084082'}
 
 palettes = {'phospho':phospho_palette,
            'nuc':nuc_palette,
@@ -407,14 +407,14 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
         'weight' : 'normal',
         'size'   : 16}
     plt.rc('font', **font)
+    plt.rc('ytick', labelsize=16)
+    plt.rc('xtick', labelsize=16)
 
     if save_fig:
         fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
     else:
-        fig, (ax1) = plt.subplots(1, 1, figsize=(5,3))
+        fig, (ax1) = plt.subplots(1, 1, figsize=(12,14))
 
-    plt.rc('ytick', labelsize=16)
-    plt.rc('xtick', labelsize=16)
 
     palette = palettes.get(param)
 
@@ -450,16 +450,17 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                     mark = 'o'
                 ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
                 if param == 'nuc':
-                    ax1.set_ylim([0,100])
+                    ax1.set_ylim([22,31])
                     ax1.set_xlim([-2, 61])
+                    ax1.set_yticks(np.arange(22, 32, step=2))
                 else:
-                    ax1.set_ylim([0,100])
+                    ax1.set_ylim([-2,102])
+                    ax1.set_yticks(np.arange(0, 101, step=25))
 
 
-    ax1.set_ylim(-5,105)
-    ax1.set_xlim(-2,61)
+    # ax1.set_ylim(-5,105)
+    # ax1.set_xlim(-2,61)
 
-    ax1.set_yticks(np.arange(0, 101, step=25))
     ax1.set_xticks(np.arange(0, 61, step=15))
 
 
@@ -564,7 +565,7 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
     if save_fig:
         fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
     else:
-        fig, (ax1) = plt.subplots(1, 1, figsize=(5,3))
+        fig, (ax1) = plt.subplots(1, 1, figsize=(14,10))
 
     plt.rc('ytick', labelsize=10)
     plt.rc('xtick', labelsize=10)
@@ -606,14 +607,14 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
     ax1.plot(AN+AC, AN+IN,  m, color = palette.get(sig),mec='black' )
 
 
-    ax1.set_ylim(22,31)
-    # ax1.set_ylim(-5,105)
+    # ax1.set_ylim(22,29.5)
+    ax1.set_ylim(-5,105)
+
+    # ax1.set_yticks(np.arange(22, 29.5, step=2))
+    ax1.set_yticks(np.arange(0, 101, step=25))
 
     # ax1.set_xlim(-1,31)
     ax1.set_xlim(-1,102)
-
-    ax1.set_yticks(np.arange(22, 31, step=2))
-    # ax1.set_yticks(np.arange(0, 101, step=25))
 
     # ax1.set_xticks(np.arange(0, 31, step=10))
     ax1.set_xticks(np.arange(0, 105, step=25))
