@@ -65,8 +65,8 @@ def plt_param_integrals(model_fxns, top_params, plt_top, params_constants, initi
             areas1=np.zeros(601)
             areas2=np.zeros(601)
             for i in range(1,601):
-                areas1[i-1]=(data[i-1,2]+data[i,2])*10/params_constants[2]
-                areas2[i-1]=(data[i-1,3]+data[i,3])*10/params_constants[2]
+                areas1[i-1]=(data[i-1,2]+data[i,2])/2*10/params_constants[2]
+                areas2[i-1]=(data[i-1,3]+data[i,3])/2*10/params_constants[2]
             integral1=np.zeros((600))
             integral2=np.zeros((600))
             integral1[0]=areas1[0]
