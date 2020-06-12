@@ -9,10 +9,10 @@ import matplotlib.pyplot as plt
 
 # generate ramps
 def gen_ramp():
-    ramp_start = rand.randrange(50000,450000, 50000)
-    ramp_end = rand.randrange(ramp_start,550000, 50000)+ramp_start
-    if ramp_end > 550000:
-        ramp_end = 550000
+    ramp_start = rand.randrange(50,450, 50)
+    ramp_end = rand.randrange(ramp_start,550, 50)+ramp_start
+    if ramp_end > 550:
+        ramp_end = 550
     return ramp_start, ramp_end
 
 
@@ -34,7 +34,7 @@ def gen_step_size(r_start, r_end, step_num):
     diff = r_end - r_start
     for i in range(step_num-1):
 #         print(steps)
-        val = rand.randrange(0, diff,30000)
+        val = rand.randrange(0, diff,300)
         steps.append(val)
         diff -= val
     return(steps)
@@ -72,20 +72,34 @@ def get_ramp_signal(t_step, steps):
 # calculate difference
 
 
-def get_odes_predict(model_fxns, ts_steps, param_sets, inits, total_protein, time, selection=''):
-    traces = np.zeros([len(param_sets), len(time)])
+def get_odes_predict1(model_fxns, ts_steps, param_sets, inits, total_protein, time, selection=''):
+    traces1 = np.zeros([len(param_sets), len(time)])
+    traces2 = np.zeros([len(param_sets), len(time)])
+    for i, params in enumerate(param_sets):
+        ss_inits = run_ss(model_fxns.m, inits, total_protein, params)
+        data = simulate_wt_experiment(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ts_steps])
+        traces1[i] = (data[:,2]+data[:,3])/total_protein[2]*100
+        traces2[i] = (data[:,3]+data[:,4])/total_protein[2]*100
+    return traces1, traces2
+
+def get_odes_predict2(model_fxns, ts_steps, param_sets, inits, total_protein, time, selection=''):
+    traces1 = np.zeros([len(param_sets), len(time)])
+    traces2 = np.zeros([len(param_sets), len(time)])
+
     for i, params in enumerate(param_sets):
         ss_inits = run_ss(model_fxns.m, inits, total_protein, params)
         # if selection:
-        if selection == 't100a':
-            data = model_fxns.t100a(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ts_steps])
-        elif selection == 'nopos':
-            data = model_fxns.nopos(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ts_steps])
-        else:
-            data = simulate_wt_experiment(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ts_steps])
-        traces[i] = data[:,2]/total_protein[2]*100
-    return traces
+        # if selection == 't100a':
+        #     data = model_fxns.t100a(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ts_steps])
+        # elif selection == 'nopos':
+        #     data = model_fxns.nopos(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ts_steps])
+        # else:
+        data = simulate_wt_experiment(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ts_steps])
+        traces1[i] = (data[:,1]+data[:,2])/total_protein[1]*100
+        traces2[i] = (data[:,2]+data[:,3])/total_protein[1]*100
+        # traces[i] = data[:,2]/total_protein[2]*100
 
+    return traces1, traces2
 # for caculating area - old doesn't work
 # def get_odes_extremes(fxn,ts_steps,param_sets,num_predict):
 #     traces = []
@@ -110,9 +124,13 @@ def get_odes_predict(model_fxns, ts_steps, param_sets, inits, total_protein, tim
 #     return ratio
 
 # for calculating average
-def get_average(fxn, ts_steps, param_sets, inits, total_protein, time, selection=''):
-    traces = get_odes_predict(fxn, ts_steps, param_sets, inits, total_protein, time, selection)
-    return np.average(traces, axis=0)
+def get_average1(fxn, ts_steps, param_sets, inits, total_protein, time, selection=''):
+    traces = get_odes_predict1(fxn, ts_steps, param_sets, inits, total_protein, time, selection)
+    return np.average(traces[0], axis=0), np.average(traces[1], axis=0)
+
+def get_average2(fxn, ts_steps, param_sets, inits, total_protein, time, selection=''):
+    traces = get_odes_predict2(fxn, ts_steps, param_sets, inits, total_protein, time, selection)
+    return np.average(traces[0], axis=0), np.average(traces[1], axis=0)
 
 def get_mse(ave1, ave2):
     return sum((ave1 - ave2)**2)
@@ -126,10 +144,13 @@ def get_differentiating_ramp(num_runs, time,
         ts_steps = gen_ramp_rand()
 #         print(params_sets[0])
         # for model_params in
-        ave1 = get_average(model_fxns1, ts_steps, model_params1, inits1, total_protein1, time, selection)
-        ave2 = get_average(model_fxns2, ts_steps, model_params2, inits2, total_protein2, time, selection)
+        ave1 = get_average1(model_fxns1, ts_steps, model_params1, inits1, total_protein1, time, selection)
+        ave2 = get_average2(model_fxns2, ts_steps, model_params2, inits2, total_protein2, time, selection)
 
-        mse = get_mse(ave1, ave2)#/[get_ramp_signal(x, ts_steps) for x in time]
+        mse1 = get_mse(ave1[0], ave2[0])#/[get_ramp_signal(x, ts_steps) for x in time]
+        mse2 = get_mse(ave1[1], ave2[1])#/[get_ramp_signal(x, ts_steps) for x in time]
+        mse = mse1 +mse2
+        # print(mse)
         # print(mse)
         if i == 0:
             ramp_vals = [mse,ts_steps]

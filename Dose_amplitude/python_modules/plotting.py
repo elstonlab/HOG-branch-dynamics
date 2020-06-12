@@ -7,41 +7,22 @@ from model import *
 import pandas as pd
 import warnings
 
-MAPK_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#8ace88', 250000:'#5ab769', 350000: '#319a50', 450000:'#117b38', 550000:'#005723'}
-MAP2K_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#84bcdb', 250000:'#5ab769', 350000: '#319a50', 450000:'#117b38', 550000:'#084082'}
-MAP3K_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#fb7d5d', 250000:'#5ab769', 350000: '#319a50', 450000:'#117b38', 550000:'#840711'}
-osmo_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#adabd2', 250000:'#5ab769', 350000: '#7566ae', 450000:'#117b38', 550000:'#491285'}
-ptp_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#D9A673', 250000:'#B3804D', 350000: '#8C5926', 450000:'#794613', 550000:'#663300'}
-pinks = {0:'#323232', 50000:'#f6ab83', 150000:'#f06043', 250000:'#B3804D', 350000: '#8C5926', 450000:'#794613', 550000:'#cb1b50'}
+phospho_palette = {150:'#8ace88', 350: '#319a50', 550:'#005723'}
+nuc_palette = {150:'#84bcdb', 350: '#196789', 550:'#084082'}
 
-MAPK_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#5ab769', 250000:'#5ab769', 350000: '#319a50', 450000:'#117b38', 550000:'#005723'}
-MAP2K_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#84bcdb', 250000:'#5ab769', 350000: '#319a50', 450000:'#117b38', 550000:'#084082'}
-MAP3K_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#fb7d5d', 250000:'#5ab769', 350000: '#319a50', 450000:'#117b38', 550000:'#840711'}
-osmo_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#adabd2', 250000:'#5ab769', 350000: '#7566ae', 450000:'#117b38', 550000:'#491285'}
-ptp_palette = {0:'#323232', 50000:'#D3D3D3', 150000:'#D9A673', 250000:'#B3804D', 350000: '#8C5926', 450000:'#794613', 550000:'#663300'}
-pinks = {0:'#323232', 50000:'#f6ab83', 150000:'#f06043', 250000:'#B3804D', 350000: '#8C5926', 450000:'#794613', 550000:'#cb1b50'}
+palettes = {'phospho':phospho_palette,
+           'nuc':nuc_palette,
+           'nuc2':nuc_palette,
+           'nuc3':nuc_palette,
+           'nuc4':nuc_palette,
+           'sho1':nuc_palette,
+           'sln1':nuc_palette,
+           'all Hog1': nuc_palette}
 
+x_labels = {'phospho': 'pp Hog1',
+          'nuc': 'nuc Hog1'}
 
-palettes = {0:MAP3K_palette,
-           1:MAP2K_palette,
-           2: MAPK_palette,
-           3:osmo_palette,
-           4:ptp_palette }
-
-x_labels = {0: '% active MAP3K',
-          1: '% pp Pbs2',
-          2: '% pp Hog1',
-          3: 'Osmolyte (uM)',
-          4: '% active phosphatase'}
-
-param_colors = {'M1': ['#be202e','#606060', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d'],
-                'M1_kb': ['#be202e','#606060','#258b44', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d'],
-                'M2': ['#be202e','#258b44', '#851747','#33669a','#05582d', '#5f3c99', '#851747','#33669a','#05582d', '#5f3c99', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d'],
-                'M2a': ['#be202e','#258b44', '#606060','#851747','#33669a','#05582d', '#5f3c99', '#851747','#33669a','#05582d', '#5f3c99', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d'],
-                'M3': ['#be202e','#258b44', '#606060','#851747','#33669a','#05582d', '#5f3c99', '#8C5926','#851747','#33669a','#05582d', '#5f3c99', '#8C5926','#851747','#33669a','#05582d', '#8C5926','#851747','#33669a','#05582d', '#8C5926'],
-                'M3c': ['#be202e', '#be202e','#258b44','#606060', '#606060','#851747','#33669a','#05582d', '#5f3c99', '#8C5926','#851747','#33669a','#05582d', '#5f3c99', '#8C5926','#851747','#33669a','#05582d', '#8C5926','#851747','#33669a','#05582d', '#8C5926'],
-                'M4': ['#be202e', '#258b44','#258b44', '#606060','#851747','#33669a','#05582d', '#5f3c99', '#8C5926','#851747','#33669a','#05582d', '#5f3c99', '#8C5926','#851747','#33669a','#05582d', '#8C5926','#851747','#33669a','#05582d', '#8C5926']
-
+param_colors = {'M16': ['#be202e','#606060', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d', '#851747','#33669a','#05582d', '#851747','#33669a'],
           }
 
 def simulate_ptpD_experiment(m, inits, total_protein, sig, learned_params, time, run_type=None):
@@ -56,167 +37,194 @@ def run_ss_ptps(m, inits, total_protein, learned_params):
     ss = fsolve(m, inits, args=(0,total_protein, 0, learned_params))
     return ss
 
-def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initials,  doses, time, param,
-                        mapk_wt_data=None, mapk_t100a_data=None, mapk_time=None, ptpD=False, ss=False, plt_bad=0,
+
+def plt_param_behaviors1(model_fxns, top_params, plt_top, params_constants, initials,  doses, time, param,
+                        mapk_wt_data=None, mapk_time=None, ss=False, plt_bad=0,
                         save_fig=''):
     plt.clf()
     font = {'family' : 'Arial',
         'weight' : 'normal',
-        'size'   : 20}
+        'size'   : 10}
     plt.rc('font', **font)
 
-    fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(10,4))
+    # fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(6,2.5))
+    fig, (ax1) = plt.subplots(1, 1, figsize=(6,2.5))
 
-    # plot 1
-#     title_text = 'Gen ' + str(gen) + ' best fits to WT'
-    # title_text = 'Wild-type Simulations'
-    # ax1.set_title(title_text, fontsize=20)
-    # ax1.set_xlabel('Time (min)', fontsize=16)
-    plt.rc('xtick', labelsize=20)
-    plt.rc('ytick', labelsize=20)
+
+
+    plt.rc('xtick', labelsize=10)
+    plt.rc('ytick', labelsize=10)
     palette = palettes.get(param)
-    # ax1.set_ylabel(x_labels.get(param), fontsize=24)
+
     # ax1.set_yticks(np.arange(0, 101, step=25))
-    # ax1.set_xticks(np.arange(0, 61, step=15))
+    ax1.set_xticks(np.arange(0, 61, step=15))
 
     if mapk_wt_data:
-        # tdoses = [0, 150000, 350000, 550000]
+        params = top_params.mean(axis=0)
         for sig, wt_data in zip(doses, mapk_wt_data):
-            # ax1.plot(mapk_time, wt_data, 'o', markersize=10, color=palette.get(sig), label = str(int(sig/1000))+'mM KCl')
             ax1.plot(mapk_time, wt_data, 'o', markersize=10, color=palette.get(sig), label = str(int(sig/1000))+'mM KCl')
 
-#     ax1.legend()
-
-    # plot 2
-#     title_text = 'Gen ' + str(gen) +  ' best fits to T100A + inhib'
-    # title_text = 'Inhibited MAPK Simulations'#'Best fits to kinase dead mutant dose data'
-    # ax2.set_title(title_text, fontsize=20)
-    # ax2.set_xlabel('Time (min)', fontsize=16)
-    # ax2.set_yticks(np.arange(0, 101, step=25))
-    # ax2.set_xticks(np.arange(0, 61, step=15))
-    # ax2.set_ylabel(x_labels.get(param), fontsize=16)
-
-    if mapk_t100a_data:
-        for sig, t100a_data in zip(doses, mapk_t100a_data):
-#             print(len(t100a_data))
-#             if sig == 0:
-#                 continue
-#                 print(mapk_time_t100a_long)
-#                 ax2.plot(mapk_time_t100a_long, t100a_data, '^', mew=2, markersize=10, color=palette.get(sig))
-#             else:
-            ax2.plot(mapk_time, t100a_data, '^', mew=2, markersize=10, color=palette.get(sig))
+    # if param == 3:
+    #     dt = 0.1
+    #     steps = 2001
+    #     time = np.linspace(0,dt*steps,steps)
+    # else:
+    #     ax1.set_ylim(0,100)
 
 
-    if param == 3:
-#         ax1.set_ylim(0,150)
-        dt = 0.1
-        steps = 601
-        time = np.linspace(0,dt*steps,steps)
-        # ax1.set_yscale("log", nonposy='clip')
-        # ax2.set_yscale("log", nonposy='clip')
-    else:
-        ax1.set_ylim(-5,105)
-        ax2.set_ylim(-5,105)
+    for sig in doses:
+        if param == 'all Hog1':
+            ss_data = run_ss(model_fxns.m, initials, params_constants, top_params[0:plt_top][-1])
+            data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, top_params[0:plt_top][-1], time)
+            labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+            ax2.plot(time, (params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100, label = labels[0], color = '#CCBB44', linewidth=2)
+            ax1.plot(time, data[:,2]/params_constants[2]*100, label = labels[1], color = '#228833', linewidth=2)
+            ax1.plot(time, data[:,3]/params_constants[2]*100,  label = labels[2], color = '#4477AA', linewidth=2)
+            ax2.plot(time, data[:,4]/params_constants[2]*100,  label = labels[3], color = '#66CCEE', linewidth=2)
+            ax1.legend(title='Active',loc='best')
+            ax2.legend(title='Inactive', loc='center left', bbox_to_anchor=(1, 0.5))
+        for i, params in enumerate(top_params[0:plt_top]):
+            #                 if ss:
+                ss_data = run_ss(model_fxns.m, initials, params_constants, params)
+#                     data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
+#                 else:
+                data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
+                phospho = (data[:,2]+data[:,3])/params_constants[2]*100
+                nuc = (data[:,3]+data[:,4])/params_constants[2]*100
+                # phospho = (data[:,1]+data[:,2])/params_constants[1]*100
+                # nuc = (data[:,2]+data[:,3])/params_constants[1]*100
+                if param == 'phospho':
+                    ax1.plot(time, phospho, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'nuc':
+                    ax1.plot(time, nuc, color=palette.get(sig), label = str(i))
+                    ax1.set_ylim([19,80])
+                    # ax2.plot(time,data[:,5])
+                elif param == 'sln1':
+                    ax1.plot(time, data[:,0]/params_constants[0]*100, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'sho1':
+                    ax1.plot(time, data[:,1]/params_constants[1]*100, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'all Hog1':
+                    # labels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+                    # labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+                    ax2.plot(time, (params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100, label = labels[0], color = '#CCBB44', linewidth=2)
+                    ax1.plot(time, data[:,2]/params_constants[2]*100, label = labels[1], color = '#228833', linewidth=2)
+                    ax1.plot(time, data[:,3]/params_constants[2]*100,  label = labels[2], color = '#4477AA', linewidth=2)
+                    ax2.plot(time, data[:,4]/params_constants[2]*100,  label = labels[3], color = '#66CCEE', linewidth=2)
 
-#     if params_constants[-1] == 0:
-#         ax1.set_ylim(50,105)
-    if ptpD:
-        # for params in top_params[:plt_top]:
-        #     ptpD_total_protein = params_constants[:-2]+[550000*2, 0]
-        #     ptpD_inits = initials[:-1]+[0]
-        #
-        #     ptpD_ss_inits = run_ss(model_fxns.m, ptpD_inits, ptpD_total_protein, params)
-        #     # ptpD_ss_inits = run_ss_ptps(model_fxns.m, initials, params_constants, params)
-        #
-        #     # check = params_constants - ptpD_ss_inits
-        #     # if (check < 0).any():
-        #         # return ((63+69+18*2+27)*100)**2
-        #     # else:
-        #         # mse_total = 0
-        #     ptp_doses = [0, 150000, 350000, 550000]
-        #     plt.rc('xtick', labelsize=20)
-        #     plt.rc('ytick', labelsize=20)
-        #     # for dose, data in zip(doses, mapk_ptp_data):
-        #     for sig in doses:
-        #
-        #         odes = simulate_wt_experiment(model_fxns.m, ptpD_ss_inits, ptpD_total_protein, sig, params, time)
-        #         # odes = simulate_ptpD_experiment(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-        #
-        #         active = odes[:,param]/params_constants[param]*100
-        #         ax1.plot(time, active, color=pinks.get(sig), linewidth=3, alpha=.75)
-        #         # data = model_fxns.t100a(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-        #         data = model_fxns.t100a(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-        #         active = data[:,param]/params_constants[param]*100
-        #         ax2.plot(time, active, '--', color=palette.get(sig))
-        #         ax1.set_ylim(50,100)
-        #         ax1.set_yticks(np.arange(50, 101, step=10))
-        for params in top_params[:plt_top]:
-            # ptpD_total_protein = params_constants[:-2]+[550000*2, 0]
-            # ptpD_inits = initials[:-1]+[0]
+                    # fig.legend([ax1,ax2], labels, loc='center left', bbox_to_anchor=(1, 0.5))
+                    ax1.set_ylim([-2,102])
+                    ax2.set_ylim([-2,102])
+                else:
+                    print('wrong param')
 
-            # ptpD_ss_inits = run_ptpD_ss_M2c_ptp(model_fxns.m, initials, params_constants, params)
-            ptpD_ss_inits = run_ptpD_ss_M3_ptp(model_fxns.m, initials, params_constants, params)
-
-            # ptpD_ss_inits = run_ss_ptps(model_fxns.m, initials, params_constants, params)
-
-            check = params_constants - ptpD_ss_inits
-            if (check < 0).any():
-                continue
-            # else:
-                # mse_total = 0
-            # ptp_doses = [0, 150000, 350000, 550000]
-            ptp_doses = [0]
-
-            plt.rc('xtick', labelsize=20)
-            plt.rc('ytick', labelsize=20)
-            # for dose, data in zip(doses, mapk_ptp_data):
-            for sig in doses:
-                # odes = simulate_ptpD_experiment_M2c_ptp(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-                odes = simulate_ptpD_experiment_M3_ptp(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-
-                # odes = simulate_ptpD_experiment(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-
-                active = odes[:,param]/params_constants[param]*100
-                ax1.plot(time, active, color=pinks.get(sig), linewidth=3, alpha=.75)
-                # data = model_fxns.t100a(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-                data = model_fxns.t100a(model_fxns.m, ptpD_ss_inits, params_constants, sig, params, time)
-                active = data[:,param]/params_constants[param]*100
-                ax2.plot(time, active, '--', color=palette.get(sig))
-                # ax1.set_ylim(50,100)
-                ax1.set_yticks(np.arange(50, 101, step=10))
-
-    else:
-        # ax1.plot(time, np.zeros(len(time)), color=palette.get(0))
-        # ax2.plot(time, np.zeros(len(time)), '--', color=palette.get(0))
-
-        for sig in doses:
-            for params in top_params[:plt_top]:
-                    if ss:
-                        ss_data = run_ss(model_fxns.m, initials, params_constants, params)
-                        data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
-                    else:
-                        data = simulate_wt_experiment(model_fxns.m, initials, params_constants, sig, params, time)
-                    if param == 3:
-                        active = [x/ss_data[3] for x in data[:,param]]
-                    else:
-                        active = data[:,param]/params_constants[param]*100
-                    ax1.plot(time, active, color=palette.get(sig))
-                    if ss:
-                        ss_data = run_ss(model_fxns.m, initials, params_constants, params)
-                        data = model_fxns.t100a(model_fxns.m, ss_data, params_constants, sig, params, time)
-                    else:
-                        data = model_fxns.t100a(model_fxns.m, initials, params_constants, sig, params, time)
-                    if param == 3:
-                        active = [x/ss_data[3] for x in data[:,param]]
-                    else:
-                        active = data[:,param]/params_constants[param]*100
-                    ax2.plot(time, active, '--', color=palette.get(sig))
-
-#     ax1.legend(bbox_to_anchor=[1, 0.5], loc='center left')
+    # ax1.legend(title='Active',loc='best')
+    # ax2.legend(title='Inactive', loc='best')
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=1)
-    ax2.grid(color='grey', linestyle='-', axis='y', linewidth=1)
+    # ax2.grid(color='grey', linestyle='-', axis='y', linewidth=1)
+
+    ax1.legend( loc='center left', bbox_to_anchor=(1, 0.5))
     if plt_bad:
         plt_thresh_behavior(model_fxns, top_params, plt_bad, params_constants, initials,  doses, time, param, ax1, ax2)
+
+    if save_fig:
+        plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
+        dpi=300,bbox_inches='tight')
+    plt.show()
+
+def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initials,  doses, time, param,
+                        mapk_wt_data=None, mapk_time=None, ss=False, plt_bad=0,
+                        save_fig=''):
+    plt.clf()
+    font = {'family' : 'Arial',
+        'weight' : 'normal',
+        'size'   : 10}
+    plt.rc('font', **font)
+
+    # fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(6,2.5))
+    fig, (ax1) = plt.subplots(1, 1, figsize=(6,2.5))
+
+
+
+    plt.rc('xtick', labelsize=10)
+    plt.rc('ytick', labelsize=10)
+    palette = palettes.get(param)
+
+    # ax1.set_yticks(np.arange(0, 101, step=25))
+    ax1.set_xticks(np.arange(0, 61, step=15))
+
+    if mapk_wt_data:
+        params = top_params.mean(axis=0)
+        for sig, wt_data in zip(doses, mapk_wt_data):
+            ax1.plot(mapk_time, wt_data, 'o', markersize=10, color=palette.get(sig), label = str(int(sig/1000))+'mM KCl')
+
+    # if param == 3:
+    #     dt = 0.1
+    #     steps = 2001
+    #     time = np.linspace(0,dt*steps,steps)
+    # else:
+    #     ax1.set_ylim(0,100)
+
+
+    for sig in doses:
+        if param == 'all Hog1':
+            ss_data = run_ss(model_fxns.m, initials, params_constants, top_params[0:plt_top][-1])
+            data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, top_params[0:plt_top][-1], time)
+            labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+            ax2.plot(time, (params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100, label = labels[0], color = '#CCBB44', linewidth=2)
+            ax1.plot(time, data[:,2]/params_constants[2]*100, label = labels[1], color = '#228833', linewidth=2)
+            ax1.plot(time, data[:,3]/params_constants[2]*100,  label = labels[2], color = '#4477AA', linewidth=2)
+            ax2.plot(time, data[:,4]/params_constants[2]*100,  label = labels[3], color = '#66CCEE', linewidth=2)
+            ax1.legend(title='Active',loc='best')
+            ax2.legend(title='Inactive', loc='center left', bbox_to_anchor=(1, 0.5))
+        for i, params in enumerate(top_params[0:plt_top]):
+            #                 if ss:
+                ss_data = run_ss(model_fxns.m, initials, params_constants, params)
+#                     data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
+#                 else:
+                data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, params, time)
+                # phospho = (data[:,2]+data[:,3])/params_constants[2]*100
+                # nuc = (data[:,3]+data[:,4])/params_constants[2]*100
+                phospho = (data[:,1]+data[:,2])/params_constants[1]*100
+                nuc = (data[:,2]+data[:,3])/params_constants[1]*100
+                if param == 'phospho':
+                    ax1.plot(time, phospho, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'nuc':
+                    ax1.plot(time, nuc, color=palette.get(sig), label = str(i))
+                    ax1.set_ylim([19,81])
+                    # ax2.plot(time,data[:,5])
+                elif param == 'sln1':
+                    ax1.plot(time, data[:,0]/params_constants[0]*100, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'sho1':
+                    ax1.plot(time, data[:,1]/params_constants[1]*100, color=palette.get(sig))
+                    ax1.set_ylim([-2,102])
+                elif param == 'all Hog1':
+                    # labels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+                    # labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+                    ax2.plot(time, (params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100, label = labels[0], color = '#CCBB44', linewidth=2)
+                    ax1.plot(time, data[:,2]/params_constants[2]*100, label = labels[1], color = '#228833', linewidth=2)
+                    ax1.plot(time, data[:,3]/params_constants[2]*100,  label = labels[2], color = '#4477AA', linewidth=2)
+                    ax2.plot(time, data[:,4]/params_constants[2]*100,  label = labels[3], color = '#66CCEE', linewidth=2)
+
+                    # fig.legend([ax1,ax2], labels, loc='center left', bbox_to_anchor=(1, 0.5))
+                    ax1.set_ylim([-2,102])
+                    ax2.set_ylim([-2,102])
+                else:
+                    print('wrong param')
+
+    # ax1.legend(title='Active',loc='best')
+    # ax2.legend(title='Inactive', loc='best')
+    ax1.grid(color='grey', linestyle='-', axis='y', linewidth=1)
+    # ax2.grid(color='grey', linestyle='-', axis='y', linewidth=1)
+
+    ax1.legend( loc='center left', bbox_to_anchor=(1, 0.5))
+    if plt_bad:
+        plt_thresh_behavior(model_fxns, top_params, plt_bad, params_constants, initials,  doses, time, param, ax1, ax2)
+
     if save_fig:
         plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
         dpi=300,bbox_inches='tight')
@@ -316,7 +324,7 @@ def plt_mses_gen(gen, mses, idx_top, save_fig=''):
     ax3.set_ylabel('MSE', fontsize=20)
     ax3.set_xlim([0,gen])
     # ax3.set_ylim(1000,5000)
-    ax3.set_ylim([3.5,6])
+    # ax3.set_ylim([3.5,6])
 
     if save_fig:
         plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
@@ -552,10 +560,10 @@ def plt_corr(labelnames, df_top_params, save_fig=''):
     print(so[-10-len(labelnames):-len(labelnames)])
     plt.show()
 
-def plt_rand_behaviors(model_fxns, top_params, plt_top, params_constants, initials, time,
+def plt_rand_behaviors1(model_fxns, top_params, plt_top, total_protein, inits, time,
                             ramp_vals, average, selection='',
                             save_fig=''):
-    fig, (ax1) = plt.subplots(1, 1, figsize=(9,4))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9,4))
 
     colors = sns.color_palette("Set2", 10)
     pal2 = sns.set_palette(colors)
@@ -563,20 +571,52 @@ def plt_rand_behaviors(model_fxns, top_params, plt_top, params_constants, initia
     ax1.set_xlabel('Time (min)', fontsize=16)
 
     for params in top_params[:plt_top]:
-        ss_data = run_ss(model_fxns.m, initials, params_constants, params)
-        if selection == 't100a':
-            data = model_fxns.t100a(model_fxns.m, ss_data, params_constants, 0, params, time, run_type=['rand', ramp_vals[1]])
-        elif selection == 'nopos':
-            data = model_fxns.nopos(model_fxns.m, ss_data, params_constants, 0, params, time, run_type=['rand', ramp_vals[1]])
-        else:
-            data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, 0, params, time, run_type=['rand', ramp_vals[1]])
-        active = data[:,2]/params_constants[2]*100
+        ss_inits = run_ss(model_fxns.m, inits, total_protein, params)
+        data = simulate_wt_experiment(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ramp_vals[1]])
+        active = (data[:,2]+data[:,3])/total_protein[2]*100
+        nuc = (data[:,3]+data[:,4])/total_protein[2]*100
         ax1.plot(time, active)
-    ax1.plot(time, average, linewidth=4, color='black')
+        ax2.plot(time, nuc)
+
+    ax1.plot(time, average[0], '--',linewidth=2, color='black')
+    ax2.plot(time, average[1], '--', linewidth=2, color='black')
+
     if save_fig:
         plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
         dpi=300,bbox_inches='tight')
     ax1.set_ylim(0,100)
+    ax2.set_ylim(0,100)
+
+    plt.show()
+
+def plt_rand_behaviors2(model_fxns, top_params, plt_top, total_protein, inits, time,
+                            ramp_vals, average, selection='',
+                            save_fig=''):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9,4))
+
+    colors = sns.color_palette("Set2", 10)
+    pal2 = sns.set_palette(colors)
+    ax1.set_ylabel('% pp Hog1', fontsize=16)
+    ax1.set_xlabel('Time (min)', fontsize=16)
+
+    for params in top_params[:plt_top]:
+        ss_inits = run_ss(model_fxns.m, inits, total_protein, params)
+        # print(ramp_vals[1])
+        data = simulate_wt_experiment(model_fxns.m, ss_inits, total_protein, 0, params, time, run_type=['rand', ramp_vals[1]])
+        active = (data[:,1]+data[:,2])/total_protein[1]*100
+        print(active[50])
+        nuc = (data[:,2]+data[:,3])/total_protein[1]*100
+        ax1.plot(time, active,linewidth=2)
+        ax2.plot(time, nuc, linewidth=2)
+
+    ax1.plot(time, average[0], '--',linewidth=2, color='black')
+    ax2.plot(time, average[1], '--', linewidth=2, color='black')
+
+    if save_fig:
+        plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
+        dpi=300,bbox_inches='tight')
+    ax1.set_ylim(0,100)
+    ax2.set_ylim(0,100)
     plt.show()
 
 def plt_deriv(mses, zoom, elim, deriv=1, window=False):
@@ -644,142 +684,75 @@ def plt_idx_vs_mse(mses, zoom, idx_thresh=False):
 #         if idx % int(len(top_params)*.1) == 0:
 #             print(str(int(idx/len(top_params)*100)) + "% complete.")
 #     return sims
-def fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, dose, t100a=False, ptpD=False,
+def fit_data_to_list1(model_fxns, top_params, params_constants, initials, time, param, dose, ptpD=False,
                         ss = False):
-        sims = []
-        for idx, params in enumerate(top_params):
-            if ss:
+        if param == 'all Hog1':
+            IC = []
+            AC = []
+            AN = []
+            IN = []
+            for params in top_params:
                 ss_data = run_ss(model_fxns.m, initials, params_constants, params)
-                if t100a:
-                    data = model_fxns.t100a(model_fxns.m, ss_data, params_constants, dose, params, time)
-                else:
-                    if ptpD:
-                        # ptp_doses = [0, 150000, 350000, 550000]
-                        ptpD_total_protein = params_constants[:-1] + [0]
-                        ptpD_inits = initials[:-1] + [0]
+                data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, dose, params, time)
+                IC.append((params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100)
+                AC.append(data[:,2]/params_constants[2]*100)
+                AN.append(data[:,3]/params_constants[2]*100)
+                IN.append(data[:,4]/params_constants[2]*100)
 
-                        ptpD_ss_inits = run_ss(model_fxns.m, ptpD_inits, ptpD_total_protein, params)
-                        # ptpD_ss_inits = model.run_ss_ptps(model_fxns.m, inits, total_protein, params)
-
-                        data = simulate_wt_experiment(model_fxns.m, ptpD_ss_inits, ptpD_total_protein, dose, params, time)
-                    else:
-                        data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, dose, params, time)
-            else:
-                if t100a:
-                    data = model_fxns.t100a(model_fxns.m, initials, params_constants, dose, params, time)
+                # IC.append((params_constants[1]-data[:,1]-data[:,2]-data[:,3])/params_constants[1]*100)
+                # AC.append(data[:,1]/params_constants[1]*100)
+                # AN.append(data[:,2]/params_constants[1]*100)
+                # IN.append(data[:,3]/params_constants[1]*100)
+            return [IC, AC, AN, IN]
+        else:
+            sims = []
+            for idx, params in enumerate(top_params):
+                if ss:
+                    ss_data = run_ss(model_fxns.m, initials, params_constants, params)
+                    data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, dose, params, time)
                 else:
                     data = simulate_wt_experiment(model_fxns.m, initials, params_constants, dose, params, time)
-            if param == 3:
-                # max_data = np.max(data)
-                # min_data = np.min(data)
-                # active = [(1-0)*(x-min_data)/(max_data-min_data)+0 for x in data]
-                # active = [(x-data[:,param][0])/data[:,param][0] for x in data[:,param]]
-                # active = [(x-ss_data[3])/ss_data[3] for x in data[:,param]]
-                active = [x/ss_data[3] for x in data[:,param]]
+                if param == 'phospho':
+                    species = (data[:,2]+data[:,3])/params_constants[2]*100
+                    # species = (data[:,1]+data[:,2])/params_constants[1]*100
 
-            else:
-                active = data[:,param]/params_constants[param]*100
+                elif param == 'nuc':
+                    species = (data[:,3]+data[:,4])/params_constants[2]*100
+                    # species = (data[:,2]+data[:,3])/params_constants[1]*100
 
-            sims.append(active)
-        print('Dose: ' + str(dose) + ' complete.')
-        return sims
+                else:
+                    print('no data')
+                sims.append(species)
+            print('Dose: ' + str(dose) + ' complete.')
+            return sims
 
-def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, time, param,
-                        exp_data=None, exp_time=None, ss=False, t100a=False, ptpD=False, ci= 95,
-                        save_fig='', save_as='.pdf'):
+def plt_param_cis1(model_fxns, top_params, params_constants, initials,  doses, time, param,
+                        exp_data=None, exp_time=None, ss=False, ptpD=False, ci= 95,
+                        save_fig=''):
     plt.clf()
     font = {'family' : 'Arial',
         'weight' : 'normal',
         'size'   : 16}
     plt.rc('font', **font)
+    plt.rc('ytick', labelsize=16)
+    plt.rc('xtick', labelsize=16)
 
     if save_fig:
         fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
     else:
-        fig, (ax1) = plt.subplots(1, 1, figsize=(5,3))
+        fig, (ax1) = plt.subplots(1, 1, figsize=(6,8))
 
-    plt.rc('ytick', labelsize=16)
-    plt.rc('xtick', labelsize=16)
 
     palette = palettes.get(param)
-
-
-    if param == 3:
-        dt = 0.1
-        steps = 1801
-        time = np.linspace(0,dt*steps,steps)
-    # elif doses == [0]:
-    #     dt = 0.1
-    #     steps = 3001
-    #     time = np.linspace(0,dt*steps,steps)
-
-
 
 
     # dashes = None
     # if t100a:
     dashes= (2,2)
 
-    # pred_col = ['#8da0ca', '#68c3a4', '#f37e80']
-    # pred_col = ['#68c3a4']
-
-    # for pred, sig in zip(pred_col, doses):
     for sig in doses:
-        if t100a:
-            if ptpD:
-                # ax1.lines[0].set_linestyle("--")
-                sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, t100a=True, ptpD=True, ss=ss)
-            else:
-                sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, t100a=True, ptpD=False, ss=ss)
-            # if params == 3:
-            #     ax1 = sns.tsplot(sims, time,  ci = ci, color=palette.get(sig), dashes=dashes)
-            # else:
-            # ax1 = sns.tsplot(sims, time,  ci = ci, color=palette.get(sig), dashes=dashes)
-        else:
-            if ptpD:
-                sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, t100a=False, ptpD=True, ss=ss)
-                # ax1.lines[0].set_linestyle("--")
-            else:
-                sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, t100a=False, ptpD=False, ss=ss)
-        # if sig == 350000:
-            # ax1 = sns.tsplot(sims, time,  ci = ci, color='#a97c50', dashes=dashes)
-            # ax1 = sns.tsplot(sims, time,  ci = ci, color=palette.get(sig), dashes=dashes)
-            # else:
-        # print(sims[0])
-        # 1/0
-        # sims = [ s for s in np.array(sims)]
-        # sims = list(filter(lambda i: i.all() <101, sims))
-        # print(sims[1])
-        # print(len(sims))
-        # test = []
-        # for e, s in enumerate(sims):
-        #     for i in s:
-        #         if i > 100:
-        #             print(e)
-        #             continue
-        # test = np.array([s for s in sims])
-        # print(len(test))
-        # # test[np.all(test, axis=0) < 100]
-        # print(len(test))
-        # print(type(test))
-        # print(type(test[0]))
-        # print(np.all())
-        test = []
-        for s in sims:
-            if sum(s) > 60001:
-                continue
-            else:
-                test.append(s)
-
-
-        # sims = sims[:3]+sims[4:56]+sims[57:79]+sims[80:97]+sims[98:]
-        # print(len(sims))
-        ax1 = sns.tsplot(sims, time,  ci = ci, color=palette.get(sig), dashes=dashes)
-
-        # ax1 = sns.tsplot(sims, time,  ci = ci, color=palette.get(sig), dashes=dashes, err_style='unit_traces')
-        # ax1 = sns.tsplot(test, time,  ci = ci, color=pred, dashes=dashes)
-
-
+        sims = fit_data_to_list1(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
+        ax1 = sns.tsplot(sims, time,  ci = ci, dashes = dashes, color=palette.get(sig))
 
     mstyles = {0: ['full'],
                 1: ['^', 'o'],
@@ -791,92 +764,319 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                 2: ['none', 'none'],
                 3: ['full'],
                 4: ['full']}
-
     if exp_data:
-        if t100a:
-            for sig, data in zip(doses, exp_data): #, mstyles.get(param)
-                mark = 'o'
+        params = top_params.mean(axis=0)
+        for sig, data in zip(doses, exp_data):
                 if sig == 0:
                     mark = 'o'
-                elif sig == 150000:
+                elif sig == 150:
                     mark = '^'
-                elif sig == 250000:
-                    mark = 'o'
-                elif sig == 350000:
-                    mark = 'v'
-                elif sig == 450000:
-                    mark = 'D'
-                elif sig == 550000:
+                elif sig == 550:
                     mark = 's'
-                ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", fillstyle='none', color=palette.get(sig), mec='black', label = str(int(sig/1000)))
-        else:
-            for sig, data in zip(doses, exp_data):
-                mark = 'o'
-                if sig == 0:
+                else:
                     mark = 'o'
-                elif sig == 150000:
-                    mark = '^'
-                elif sig == 250000:
-                    mark = 'o'
-                elif sig == 350000:
-                    mark = 'v'
-                elif sig == 450000:
-                    mark = 'D'
-                elif sig == 550000:
-                    mark = 's'
-                # if sig == 350000:
-                    # ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", fillstyle='full', color='#a97c50', mec='black', label = str(int(sig/1000)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
-                # else:
-                ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", fillstyle='full', color=palette.get(sig), mec='black', label = str(int(sig/1000)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
+                ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
+                if param == 'nuc':
+                    # ax1.set_ylim([20,70])
+                    ax1.set_xlim([-2, 61])
+                    ax1.set_yticks(np.arange(20, 71, step=10))
+                else:
+                    ax1.set_ylim([-2,102])
+                    ax1.set_yticks(np.arange(0, 101, step=25))
 
 
+    # ax1.set_ylim(-5,105)
+    # ax1.set_xlim(-2,61)
 
+    ax1.set_xticks(np.arange(0, 61, step=15))
 
 
 
     # if plt_bad:
         # plt_thresh_behavior(model_fxns, top_params, plt_bad, params_constants, initials,  doses, time, param, ax1, ax2)
 
-    if param == 3:
-        ax1.set_xticks(np.arange(0, 181, step=60))
-        ax1.set_xticks(np.arange(0, 61, step=15))
-        # ax1.set_xticks(np.arange(0, 21, step=5))
-        ax1.set_yticks(np.arange(0, 5, step=1))
-        # ax1.set_ylim(1,2.75)
-        ax1.set_ylim(1,4.5)
-        ax1.set_xlim(-1,61)
+#     if param == 3:
+#         ax1.set_xticks(np.arange(0, 201, step=50))
+#         ax1.set_yticks(np.arange(0, 5, step=1))
+#         ax1.set_ylim(0,4.25)
 
-
-
-    elif doses == [0]:
-        ax1.set_ylim(-5,105)
-        ax1.set_yticks(np.arange(0, 101, step=25))
-        ax1.set_xticks(np.arange(0, 2401, step=60))
-        ax1.set_ylim(-5,105)
-        ax1.set_xlim(-5,245)
-        plt.xticks(rotation=45)
-        # ax1.set_xticklabels(rotation=30)
-    else:
-        ax1.set_yticks(np.arange(0, 101, step=25))
-        # ax1.set_xticks(np.arange(0, 181, step=60))
-        ax1.set_xticks(np.arange(0, 61, step=15))
-        # ax1.set_xticks(np.arange(0, 21, step=5))
-        ax1.set_ylim(-5,105)
-        # ax1.set_xlim(-2,182)
-        ax1.set_xlim(-2,62)
-        # ax1.set_xlim(-1,21)
-
-
+#     elif doses == [0]:
+#         ax1.set_ylim(-5,105)
+#         ax1.set_yticks(np.arange(0, 101, step=25))
+#         ax1.set_xticks(np.arange(0, 201, step=50))
+#     else:
+#         ax1.set_yticks(np.arange(0, 101, step=25))
+#         ax1.set_xticks(np.arange(0, 61, step=15))
+#         ax1.set_ylim(-5,105)
+#         ax1.set_xlim(-2,62)
 
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
     ax1.spines['right'].set_visible(False)
     ax1.spines['top'].set_visible(False)
-    # ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+    ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
 
     if save_fig:
-        plt.savefig(save_fig+save_as, dpi=300,bbox_inches='tight')
+        plt.savefig(save_fig+".pdf", dpi=300,bbox_inches='tight')
 
     plt.show()
+def plt_all_hog1_cis1(model_fxns, top_params, params_constants, initials,  sig, time, param,
+                        exp_data=None, exp_time=None, ss=False, ptpD=False, ci= 95,
+                        save_fig=''):
+    plt.clf()
+    font = {'family' : 'Arial',
+        'weight' : 'normal',
+        'size'   : 10}
+    plt.rc('font', **font)
+
+    if save_fig:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
+    else:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(5,3))
+
+    plt.rc('ytick', labelsize=10)
+    plt.rc('xtick', labelsize=10)
+
+    palette = palettes.get(param)
+
+    llabels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+
+
+    # dashes = None
+    # if t100a:
+    dashes= (2,2)
+
+    sims = fit_data_to_list1(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
+    # for sim in sims:
+    ax1 = sns.tsplot(sims[0], time,  ci = ci, dashes = dashes, color = '#CCBB44')
+    ax1 = sns.tsplot(sims[1], time,  ci = ci, dashes = dashes, color = '#228833')
+
+    ax1 = sns.tsplot(sims[2], time,  ci = ci, dashes = dashes, color = '#4477AA')
+    ax1 = sns.tsplot(sims[3], time,  ci = ci, dashes = dashes, color = '#66CCEE')
+
+    # ax1.legend(labels=labels, title='Active',loc='best')
+    plt.legend(labels=llabels, title='Hog1', loc='center left', bbox_to_anchor=(1, 0.5))
+    # plt.legend(labels=labels, title='Active', loc='center left', bbox_to_anchor=(0.5, 0.5))
+
+
+
+    ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+    # ax.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+
+    ax1.spines['right'].set_visible(False)
+    ax1.spines['top'].set_visible(False)
+    # ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+    ax1.set_ylim(-2,102)
+
+    if sig == 150:
+        ax1.set_xlim(-1,21)
+    elif sig == 350:
+        ax1.set_xlim(-1.5,45)
+    elif sig == 550:
+        ax1.set_xlim(-1.5,60)
+
+    if save_fig:
+        plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
+
+    plt.show()
+
+
+def fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, dose, ptpD=False,
+                        ss = False):
+        if param == 'all Hog1':
+            IC = []
+            AC = []
+            AN = []
+            IN = []
+            for params in top_params:
+                ss_data = run_ss(model_fxns.m, initials, params_constants, params)
+                data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, dose, params, time)
+                # IC.append((params_constants[2]-data[:,2]-data[:,3]-data[:,4])/params_constants[2]*100)
+                # AC.append(data[:,2]/params_constants[2]*100)
+                # AN.append(data[:,3]/params_constants[2]*100)
+                # IN.append(data[:,4]/params_constants[2]*100)
+
+                IC.append((params_constants[1]-data[:,1]-data[:,2]-data[:,3])/params_constants[1]*100)
+                AC.append(data[:,1]/params_constants[1]*100)
+                AN.append(data[:,2]/params_constants[1]*100)
+                IN.append(data[:,3]/params_constants[1]*100)
+            return [IC, AC, AN, IN]
+        else:
+            sims = []
+            for idx, params in enumerate(top_params):
+                if ss:
+                    ss_data = run_ss(model_fxns.m, initials, params_constants, params)
+                    data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, dose, params, time)
+                else:
+                    data = simulate_wt_experiment(model_fxns.m, initials, params_constants, dose, params, time)
+                if param == 'phospho':
+                    # species = (data[:,2]+data[:,3])/params_constants[2]*100
+                    species = (data[:,1]+data[:,2])/params_constants[1]*100
+
+                elif param == 'nuc':
+                    # species = (data[:,3]+data[:,4])/params_constants[2]*100
+                    species = (data[:,2]+data[:,3])/params_constants[1]*100
+
+                else:
+                    print('no data')
+                sims.append(species)
+            print('Dose: ' + str(dose) + ' complete.')
+            return sims
+
+def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, time, param,
+                        exp_data=None, exp_time=None, ss=False, ptpD=False, ci= 95,
+                        save_fig=''):
+    plt.clf()
+    font = {'family' : 'Arial',
+        'weight' : 'normal',
+        'size'   : 16}
+    plt.rc('font', **font)
+    plt.rc('ytick', labelsize=16)
+    plt.rc('xtick', labelsize=16)
+
+    if save_fig:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
+    else:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(8,6))
+
+
+    palette = palettes.get(param)
+
+
+    # dashes = None
+    # if t100a:
+    dashes= (2,2)
+
+    for sig in doses:
+        sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
+        ax1 = sns.tsplot(sims, time,  ci = ci, dashes = dashes, color=palette.get(sig))
+
+    mstyles = {0: ['full'],
+                1: ['^', 'o'],
+                2: ['D', 'o', '^', 'v', 's', 'D', 'o'],
+                3: ['full'],
+                4: ['full']}
+    fstyles = {0: ['full'],
+                1: ['full', 'bottom'],
+                2: ['none', 'none'],
+                3: ['full'],
+                4: ['full']}
+    if exp_data:
+        params = top_params.mean(axis=0)
+        for sig, data in zip(doses, exp_data):
+                if sig == 0:
+                    mark = 'o'
+                elif sig == 150:
+                    mark = '^'
+                elif sig == 550:
+                    mark = 's'
+                else:
+                    mark = 'o'
+                ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
+                if param == 'nuc':
+                    ax1.set_ylim([20,70])
+                    ax1.set_xlim([-2, 61])
+                    ax1.set_yticks(np.arange(20, 71, step=10))
+                else:
+                    ax1.set_ylim([-2,102])
+                    ax1.set_yticks(np.arange(0, 101, step=25))
+
+
+    # ax1.set_ylim(-5,105)
+    # ax1.set_xlim(-2,61)
+
+    ax1.set_xticks(np.arange(0, 61, step=15))
+
+
+
+    # if plt_bad:
+        # plt_thresh_behavior(model_fxns, top_params, plt_bad, params_constants, initials,  doses, time, param, ax1, ax2)
+
+#     if param == 3:
+#         ax1.set_xticks(np.arange(0, 201, step=50))
+#         ax1.set_yticks(np.arange(0, 5, step=1))
+#         ax1.set_ylim(0,4.25)
+
+#     elif doses == [0]:
+#         ax1.set_ylim(-5,105)
+#         ax1.set_yticks(np.arange(0, 101, step=25))
+#         ax1.set_xticks(np.arange(0, 201, step=50))
+#     else:
+#         ax1.set_yticks(np.arange(0, 101, step=25))
+#         ax1.set_xticks(np.arange(0, 61, step=15))
+#         ax1.set_ylim(-5,105)
+#         ax1.set_xlim(-2,62)
+
+    ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+    ax1.spines['right'].set_visible(False)
+    ax1.spines['top'].set_visible(False)
+    ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+
+    if save_fig:
+        plt.savefig(save_fig+".pdf", dpi=300,bbox_inches='tight')
+
+    plt.show()
+
+
+def plt_all_hog1_cis(model_fxns, top_params, params_constants, initials,  sig, time, param,
+                        exp_data=None, exp_time=None, ss=False, ptpD=False, ci= 95,
+                        save_fig=''):
+    plt.clf()
+    font = {'family' : 'Arial',
+        'weight' : 'normal',
+        'size'   : 10}
+    plt.rc('font', **font)
+
+    if save_fig:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
+    else:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(5,3))
+
+    plt.rc('ytick', labelsize=10)
+    plt.rc('xtick', labelsize=10)
+
+    palette = palettes.get(param)
+
+    llabels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+
+
+    # dashes = None
+    # if t100a:
+    dashes= (2,2)
+
+    sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
+    # for sim in sims:
+    ax1 = sns.tsplot(sims[0], time,  ci = ci, dashes = dashes, color = '#CCBB44')
+    ax1 = sns.tsplot(sims[1], time,  ci = ci, dashes = dashes, color = '#228833')
+
+    ax1 = sns.tsplot(sims[2], time,  ci = ci, dashes = dashes, color = '#4477AA')
+    ax1 = sns.tsplot(sims[3], time,  ci = ci, dashes = dashes, color = '#66CCEE')
+
+    # ax1.legend(labels=labels, title='Active',loc='best')
+    plt.legend(labels=llabels, title='Hog1', loc='center left', bbox_to_anchor=(1, 0.5))
+    # plt.legend(labels=labels, title='Active', loc='center left', bbox_to_anchor=(0.5, 0.5))
+
+
+
+    ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+    # ax.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
+
+    ax1.spines['right'].set_visible(False)
+    ax1.spines['top'].set_visible(False)
+    # ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+    ax1.set_ylim(-2,102)
+
+    if sig == 150:
+        ax1.set_xlim(-1,21)
+    elif sig == 350:
+        ax1.set_xlim(-1.5,45)
+    elif sig == 550:
+        ax1.set_xlim(-1.5,60)
+
+    if save_fig:
+        plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
+
+    plt.show()
+
 
 def plt_param_cis_predictions(model_fxns, top_params, params_constants, initials,  doses, time, param,
                         exp_data=None, exp_time=None, ss=False, t100a=False, ptpD=False, ci= 95,
