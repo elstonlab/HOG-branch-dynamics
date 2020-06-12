@@ -62,7 +62,7 @@ def load_csv_data(folder):
 def molarity_conversion(molecules):
     Na = 6.02214076*10**23
     cell_volume = 44                                 # volume of a yeast cell
-    return molecules/(Na*cell_volume*10**-15)*1000 # returns uM
+    return molecules/(Na*cell_volume*10**-15)*1000   # returns mM
 
 
 ###################################################################
@@ -280,7 +280,7 @@ def model(initials,t,total_protein,sig,params):
 
     if Glycerol < 0:
         Glycerol = 0
-        
+
     dSln1 = (base_osmo + k1 * sig - Glycerol) * (Sln1_inactive) / (K1 + Sln1_inactive) - k3 * Sln1 / (K3 + Sln1)
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
     dHog1_AC = (k5 * Sln1 + k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC + (k9B - k15 * Hog1_AN) * Hog1_AN
@@ -387,7 +387,7 @@ if __name__ == '__main__':
         0, 0,
         -8, 0, -4, 0,
         -8, -8, -2
-        ]   
+        ]
 
     maximums = [0, 8, 6, 8, 0,
         4, 8, 8, 0, 0,
@@ -396,7 +396,7 @@ if __name__ == '__main__':
         0, 8, 4, 8,
         0, 2, 6
         ]
-    
+
 
     # EA params
     number_of_runs = 5

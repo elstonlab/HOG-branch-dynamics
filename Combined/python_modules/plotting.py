@@ -11,7 +11,7 @@ phospho_palette = {150:'#8ace88', 350: '#319a50', 550:'#005723'}
 nuc_palette = {150:'#84bcdb', 350: '#196789', 550:'#084082'}
 
 palettes = {'phospho':phospho_palette,
-           'nuc':phospho_palette,
+           'nuc':nuc_palette,
            'nuc2':nuc_palette,
            'nuc3':nuc_palette,
            'nuc4':nuc_palette,
@@ -77,7 +77,7 @@ def plt_param_integrals(model_fxns, top_params, plt_top, params_constants, initi
             ax1.plot(time[1:], integral1, label = labels[1], color = '#228833', linewidth=2)
             ax1.plot(time[1:], integral2,  label = labels[2], color = '#4477AA', linewidth=2)
             ax1.legend(title='Active',loc='best')
-            
+
         for params in top_params[0:plt_top]:
             #                 if ss:
                 ss_data = run_ss(model_fxns.m, initials, params_constants, params)
@@ -131,7 +131,7 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
         'size'   : 10}
     plt.rc('font', **font)
 
-    fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(6,2.5))
+    fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(12,4))
 
 
     plt.rc('xtick', labelsize=10)
@@ -176,9 +176,11 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
                 if param == 'phospho':
                     ax1.plot(time, phospho, color=palette.get(sig))
                     ax1.set_ylim([-2,102])
-                elif param == 'nuc':
-                    ax1.plot(time, nuc, color=palette.get(sig))
-                    ax1.set_ylim([-2,102])
+                # elif param == 'nuc':
+                    ax2.plot(time, nuc, color=nuc_palette.get(sig))
+                    ax2.set_ylim([19,65])
+                    ax2.set_xlim([-1,2])
+
                     # ax2.plot(time,data[:,5])
                 elif param == 'sln1':
                     ax1.plot(time, data[:,0]/params_constants[0]*100, color=palette.get(sig))
@@ -521,8 +523,25 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
     dashes= (2,2)
 
     for sig in doses:
-        sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
-        ax1 = sns.tsplot(sims, time,  ci = ci, dashes = dashes, color=palette.get(sig))
+        data = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
+        # print(len(data))
+        test = []
+        for x in data:
+            if sig == 150:
+                data = np.array([(.2545818-.22896)*(y-np.min(x))/(np.max(x)-np.min(x)) + .22896 for y in x])
+                test.append(data)
+                mark = '^'
+            elif sig == 350:
+                data = np.array([(.265072-.22896)*(y-np.min(x))/(np.max(x)-np.min(x)) + .22896 for y in x])
+                test.append(data)
+            elif sig == 550:
+                data = np.array([(.2693-.22896)*(y-np.min(x))/(np.max(x)-np.min(x)) + .22896for y in x])
+                test.append(data)
+        # print(len(data))
+        # sims = np.array([(26.93-22.896)*(y-np.min(x))/(np.max(x)+np.min(x)) + 22.896 for x in sims for y in x])
+        # print(sims)
+
+        ax1 = sns.tsplot(test, time,  ci = ci, dashes = dashes, color=palette.get(sig))
 
     mstyles = {0: ['full'],
                 1: ['^', 'o'],
@@ -536,16 +555,20 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                 4: ['full']}
     if exp_data:
         params = top_params.mean(axis=0)
-        for sig, data in zip(doses, exp_data[::-1]):
-                if sig == 0:
-                    mark = 'o'
-                elif sig == 150:
-                    mark = '^'
-                elif sig == 550:
-                    mark = 's'
-                else:
-                    mark = 'o'
-                ax1.plot(exp_time, data, marker=mark, markersize=6,  linestyle="None", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge), linestyle="-",
+        for sig, data in zip(doses, exp_data):
+            if sig == 0:
+                mark = 'o'
+            elif sig == 150:
+                data = np.array([(.2545818-.22896)*(x-np.min(data))/(np.max(data)-np.min(data)) + .22896 for x in data])
+                mark = '^'
+            elif sig == 350:
+                data = np.array([(.265072-.22896)*(x-np.min(data))/(np.max(data)-np.min(data)) + .22896 for x in data])
+            elif sig == 550:
+                data = np.array([(.2693-.22896)*(x-np.min(data))/(np.max(data)-np.min(data)) + .22896 for x in data])
+                mark = 's'
+            else:
+                mark = 'o'
+            ax1.plot(exp_time, data, marker=mark, markersize=6,  linestyle="None", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge), linestyle="-",
                 # if param == 'nuc':
                     # ax1.set_ylim([0,100])
                     # ax1.set_xlim([-2, 61])
@@ -553,13 +576,13 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                     # ax1.set_ylim([0,100])
 
 
-    ax1.set_ylim(21,65)
+    # ax1.set_ylim(19,30)
     # ax1.set_ylim(-5,105)
 
     # ax1.set_xlim(-1,31)
     ax1.set_xlim(-2,61)
 
-    ax1.set_yticks(np.arange(20, 61, step=10))
+    ax1.set_yticks(np.arange(.22, .27, step=.01))
     # ax1.set_yticks(np.arange(0, 101, step=25))
 
     # ax1.set_xticks(np.arange(0, 31, step=10))

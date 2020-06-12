@@ -81,7 +81,7 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
                     ax1.set_ylim([-2,102])
                 elif param == 'nuc':
                     ax1.plot(time, nuc, color=palette.get(sig))
-                    ax1.set_ylim([-2,102])
+                    # ax1.set_ylim([19,32])
                     # ax2.plot(time,data[:,5])
                 # elif param == 'sln1':
                 #     ax1.plot(time, data[:,0]/params_constants[0]*100, color=palette.get(sig))
@@ -450,9 +450,9 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                     mark = 'o'
                 ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
                 if param == 'nuc':
-                    ax1.set_ylim([22,31])
+                    # ax1.set_ylim([22,31])
                     ax1.set_xlim([-2, 61])
-                    ax1.set_yticks(np.arange(22, 32, step=2))
+                    # ax1.set_yticks(np.arange(22, 32, step=2))
                 else:
                     ax1.set_ylim([-2,102])
                     ax1.set_yticks(np.arange(0, 101, step=25))
@@ -527,6 +527,10 @@ def plt_all_hog1_cis(model_fxns, top_params, params_constants, initials,  sig, t
     ax1 = sns.tsplot(sims[2], time,  ci = ci, dashes = dashes, color = '#4477AA')
     ax1 = sns.tsplot(sims[3], time,  ci = ci, dashes = dashes, color = '#66CCEE')
 
+    # ax1.set_ylim(20,80)
+    # ax1.set_yticks(np.arange(20, 81, step=10))
+
+
     # ax1.legend(labels=labels, title='Active',loc='best')
     plt.legend(labels=llabels, title='Hog1', loc='center left', bbox_to_anchor=(1, 0.5))
     # plt.legend(labels=labels, title='Active', loc='center left', bbox_to_anchor=(0.5, 0.5))
@@ -546,7 +550,7 @@ def plt_all_hog1_cis(model_fxns, top_params, params_constants, initials,  sig, t
     elif sig == 350:
         ax1.set_xlim(-1.5,45)
     elif sig == 550:
-        ax1.set_xlim(-1.5,60)
+        ax1.set_xlim(-1.5,21)
 
     if save_fig:
         plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
@@ -572,13 +576,13 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
 
     palette = palettes.get(param)
 
-    # llabels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+    llabels = ['150', '350', '550']
 
 
     # dashes = None
     # if t100a:
     dashes= (2,2)
-
+    # for sig  in sigs:
     sims = fit_data_to_list(model_fxns, top_params, params_constants, initials, time, param, sig, ptpD=False, ss=ss)
     # for sim in sims:
     # ax1 = sns.tsplot(sims[0], time,  ci = ci, dashes = dashes, color = '#CCBB44')
@@ -593,9 +597,9 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
     AC = np.average(sims[1], axis=0)[closest_idxs]
     AN = np.average(sims[2], axis=0)[closest_idxs]
     IN = np.average(sims[3], axis=0)[closest_idxs]
-    # print(IC+AC)
+    # print(sims[2]+sims[1])
     # print(len(IC+AC))
-    ax1.plot(AN+AC, AN+IN,  '-', color = '#414042' )
+    ax1.plot( np.add(np.average(sims[1], axis=0), np.average(sims[2], axis=0)), np.add(np.average(sims[2], axis=0),np.average(sims[3], axis=0)),  '-', color = '#414042' )
     if sig ==150:
         m = 'd'
     elif sig ==350:
@@ -604,14 +608,15 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
         m = 's'
     else:
         m = 'o'
-    ax1.plot(AN+AC, AN+IN,  m, color = palette.get(sig),mec='black' )
+    ax1.plot(AN+AC, AN+IN,  m, color = palette.get(sig),mec='black', label=sig)
+        # plt.legend(title='KCl (mM)', loc='center left', bbox_to_anchor=(1, 0.5))
 
 
     # ax1.set_ylim(22,29.5)
-    ax1.set_ylim(-5,105)
+    ax1.set_ylim(20,90)
 
     # ax1.set_yticks(np.arange(22, 29.5, step=2))
-    ax1.set_yticks(np.arange(0, 101, step=25))
+    ax1.set_yticks(np.arange(20, 91, step=10))
 
     # ax1.set_xlim(-1,31)
     ax1.set_xlim(-1,102)
@@ -622,7 +627,7 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
     # ax1 = sns.tsplot(sims[3], time,  ci = ci, dashes = dashes, color = '#66CCEE')
 
     # ax1.legend(labels=labels, title='Active',loc='best')
-    # plt.legend(labels=llabels, title='Hog1', loc='center left', bbox_to_anchor=(1, 0.5))
+
     # plt.legend(labels=labels, title='Active', loc='center left', bbox_to_anchor=(0.5, 0.5))
 
 
@@ -710,3 +715,181 @@ def inhibdata_to_list(model_fxns, top_params, params_constants, initials, time, 
         if idx % int(len(top_params)*.1) == 0:
             print(str(int(idx/len(top_params)*100)) + "% complete.")
     return sims
+
+
+def calc_catalyic_efficiency(labelnames, params_df, save_fig=''):
+    # if all in nuc (volume 3uM3)
+    ptp2 = 2.45206E-10 # unit = M
+    ptp3 = 7.32851E-10
+    nmd5 = 1.88471E-09
+    xpo1 = 5.34306E-09
+
+    names = ['$Hog1_{AC}$ export', '$Hog1_{AC}$ dephosphorylation'] #'import',
+    new_df = pd.DataFrame()
+    new_df['export'] = params_df['$k9B$']/xpo1/(params_df['$K9b$']*1000) # times 1000 because Kms are in mM
+    # new_df['export'] = params_df['$k9B$']/(params_df['$K9b$']*1000) # times 1000 because Kms are in mM
+
+    # new_df['import'] = params_df['$k8$']/nmd5/(params_df['$K8$']*1000)
+    new_df['ptp2'] = params_df['$k10$']/ptp2/(params_df['$K10$']*1000)
+    # new_df['ptp2'] = params_df['$k10$']/(params_df['$K10$']*1000)
+
+    # new_df['ratio'] = new_df['export'] / new_df['ptp2']
+
+    new_df = new_df.apply(np.log10)
+    df_plt_log_M = new_df.melt(var_name='param', value_name='vals')
+
+
+    with sns.axes_style("whitegrid"):
+
+        if save_fig:
+            fig, (ax1) = plt.subplots(1, 1, figsize=(2.25,2))
+        else:
+            fig, (ax1) = plt.subplots(1, 1, figsize=(14,10))
+        # plt.bar(range(0,len(labelnames)),height=dims[0],bottom=dims[1],align='center',tick_label=labelnames, color='#dcdcdc',alpha = 0.8)
+        ax1 = sns.violinplot(x='param',y='vals', data = df_plt_log_M, size=5, palette = ['#4478ab', '#258942']) #size 3
+        # ax1.set_xticklabels(names,rotation=45)
+        # plt.xlabel('Simulated Catalytic Efficiency', fontsize=20, fontweight='medium')
+        ax1.set_ylabel('')
+        # ax1.set_xlabel('Catalytic Efficiency')
+
+
+    # plt.axhline(y=0, color = '#ccbb43')
+    # plt.axvline(x=10, color = '#ccbb43')
+
+    if save_fig:
+        plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
+    return new_df['export'], new_df['ptp2']
+
+def calc_diff_in_AC(labelnames, params_df, save_fig=''):
+    # if all in nuc (volume 3uM3)
+    ptp2 = 2.45206E-10
+    ptp3 = 7.32851E-10
+    nmd5 = 1.88471E-09
+    xpo1 = 5.34306E-09
+
+    names = ['export', 'ptp2'] #'import',
+    new_df = pd.DataFrame()
+    new_df['export'] = params_df['$k9B$']/xpo1/(params_df['$K9b$']*1000) # times 1000 because Kms are in mM
+    # new_df['import'] = params_df['$k8$']/nmd5/(params_df['$K8$']*1000)
+    new_df['ptp2'] = params_df['$k10$']/ptp2/(params_df['$K10$']*1000)
+
+    new_df['ratio'] = new_df['export']/new_df['ptp2']
+
+    new_df = new_df.apply(np.log10)
+    # print(df['ratio'] < 0)
+    conditions = [(new_df['ratio'] < 0)] #, (new_df.index > 10)
+    choices = ['$Hog1_{AC}$ dephosphoylation']
+    new_df['colorx'] = np.select(conditions, choices, default='$Hog1_{AC}$ export')
+
+    print(sum((new_df['ratio'] < 0)))
+    # print(new_df['colorx'].unique() )
+    # df_plt_log_M = df_plt_log.melt(var_name='param', value_name='vals')
+    # with sns.axes_style("whitegrid"):
+        # plt.bar(range(0,len(labelnames)),height=dims[0],bottom=dims[1],align='center',tick_label=labelnames, color='#dcdcdc',alpha = 0.8)
+        # ax1 = sns.violinplot(x='param',y='vals', data = df_plt_log_M, size=5) #size 3
+
+    with sns.axes_style("whitegrid"):
+
+        if save_fig:
+            fig, (ax1) = plt.subplots(1, 1, figsize=(4,2))
+        else:
+            fig, (ax1) = plt.subplots(1, 1, figsize=(14,10))
+        # plt.bar(range(0,len(labelnames)),height=dims[0],bottom=dims[1],align='center',tick_label=labelnames, color='#dcdcdc',alpha = 0.8)
+        # ax1 = sns.violinplot(x='param',y='vals', data = df_plt_log_M, size=5) #size 3
+        ax1 = sns.scatterplot(data = new_df.reset_index(), x = 'index', y = 'ratio', size=2, hue='colorx')#, palette=['#BBBBBB', '#ccbb44'])
+
+        # ax1.set_xticklabels(names,rotation=45)
+        # plt.xlabel('Simulated Catalytic Efficiency', fontsize=20, fontweight='medium')
+        ax1.set_ylabel('')
+    # ax1.set_xlim(-1,500)
+    # plt.axhline(y=0, color = '#ccbb43')
+    ax1.get_legend().remove()
+    # new_labels = ['$Hog1_{AC}$ export', '$Hog1_{AC}$ dephosphoylation']
+    # for t, l in zip(g._legend.texts, new_labels): t.set_text(l)
+    # ax1.legend(loc='center left', bbox_to_anchor=(1, 0.5), labels =new_labels)
+
+    plt.axvline(x=10, color = '#ee6677')
+
+    if save_fig:
+        plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
+
+def plt_param_integrals(model_fxns, top_params, plt_top, params_constants, initials,  doses, time, param,
+                        mapk_wt_data=None, mapk_time=None, ss=False, plt_bad=0,
+                        save_fig=''):
+    plt.clf()
+    font = {'family' : 'Arial',
+        'weight' : 'normal',
+        'size'   : 10}
+    plt.rc('font', **font)
+
+    fig, (ax1) = plt.subplots(1, 1, figsize=(3,2.5))
+
+
+    plt.rc('xtick', labelsize=10)
+    plt.rc('ytick', labelsize=10)
+    palette = palettes.get(param)
+
+    # ax1.set_yticks(np.arange(0, 101, step=25))
+    # ax1.set_xticks(np.arange(0, 61, step=25))
+
+    # ax1.set_xlim(0, 5)
+    # ax1.set_ylim(0, 300)
+
+
+    if mapk_wt_data:
+        params = top_params.mean(axis=0)
+        for sig, wt_data in zip(doses, mapk_wt_data):
+            ax1.plot(mapk_time, wt_data, 'o', markersize=10, color=palette.get(sig), label = str(int(sig/1000))+'mM KCl')
+
+    # if param == 3:
+    #     dt = 0.1
+    #     steps = 2001
+    #     time = np.linspace(0,dt*steps,steps)
+    # else:
+    #     ax1.set_ylim(0,100)
+
+
+    for sig in doses:
+        if param == 'all Hog1':
+            ss_data = run_ss(model_fxns.m, initials, params_constants, top_params[0:plt_top][-1])
+            data = simulate_wt_experiment(model_fxns.m, ss_data, params_constants, sig, top_params[0:plt_top][-1], time)
+            labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+            areas1=np.zeros(601)
+            areas2=np.zeros(601)
+            for i in range(1,601):
+                areas1[i-1]=(data[i-1,1]+data[i,1])*10/params_constants[1] #
+                areas2[i-1]=(data[i-1,2]+data[i,2])*10/params_constants[1]
+            integral1=np.zeros((600))
+            integral2=np.zeros((600))
+            integral1[0]=areas1[0]
+            integral2[0]=areas2[0]
+            for j in range(1,600):
+                integral1[j]=areas1[j]+integral1[j-1]
+                integral2[j]=areas2[j]+integral2[j-1]
+            ax1.plot(time[1:], integral1, label = labels[1], color = '#228833', linewidth=2)
+            ax1.plot(time[1:], integral2,  label = labels[2], color = '#4477AA', linewidth=2)
+            # ax1.legend(title='Active',loc='best')
+
+        for params in top_params[0:plt_top]:
+            if param == 'all Hog1':
+                # labels = ['Inactive Cytosolic', 'Active Cytosolic', 'Active Nuclear', 'Inactive Nuclear']
+                # labels = ['Cytosolic', 'Cytosolic', 'Nuclear', 'Nuclear']
+                ax1.plot(time[1:], integral1, label = labels[1], color = '#228833', linewidth=2)
+                ax1.plot(time[1:], integral2,  label = labels[2], color = '#4477AA', linewidth=2)
+                # fig.legend([ax1,ax2], labels, loc='center left', bbox_to_anchor=(1, 0.5))
+                #ax1.set_ylim([-2,102])
+            else:
+                print('wrong param')
+
+    # ax1.legend(title='Active',loc='best')
+    # ax2.legend(title='Inactive', loc='best')
+    ax1.grid(color='grey', linestyle='-', axis='y', linewidth=1)
+
+
+    if plt_bad:
+        plt_thresh_behavior(model_fxns, top_params, plt_bad, params_constants, initials,  doses, time, param, ax1, ax2)
+
+    if save_fig:
+        plt.savefig("C:/Users/sksuzuki/Documents/Research/figures/simulations/"+save_fig+".png",
+        dpi=300,bbox_inches='tight')
+    plt.show()
