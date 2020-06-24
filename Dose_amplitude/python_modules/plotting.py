@@ -775,20 +775,21 @@ def plt_param_cis1(model_fxns, top_params, params_constants, initials,  doses, t
                     mark = 's'
                 else:
                     mark = 'o'
-                ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
+                ax1.plot(exp_time, data, marker=mark, markersize=6, linewidth = 1, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, ), palette.get(sig), mec='black' (outside edge)
                 if param == 'nuc':
                     # ax1.set_ylim([20,70])
                     ax1.set_xlim([-2, 61])
-                    ax1.set_yticks(np.arange(20, 71, step=10))
+                    ax1.set_yticks(np.arange(20, 81, step=10))
+                    ax1.set_xticks(np.arange(0, 61, step=10))
                 else:
                     ax1.set_ylim([-2,102])
                     ax1.set_yticks(np.arange(0, 101, step=25))
+                    ax1.set_xticks(np.arange(0, 61, step=15))
 
 
     # ax1.set_ylim(-5,105)
     # ax1.set_xlim(-2,61)
 
-    ax1.set_xticks(np.arange(0, 61, step=15))
 
 
 
@@ -813,10 +814,10 @@ def plt_param_cis1(model_fxns, top_params, params_constants, initials,  doses, t
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
     ax1.spines['right'].set_visible(False)
     ax1.spines['top'].set_visible(False)
-    ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+    # ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
 
     if save_fig:
-        plt.savefig(save_fig+".pdf", dpi=300,bbox_inches='tight')
+        plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
 
     plt.show()
 def plt_all_hog1_cis1(model_fxns, top_params, params_constants, initials,  sig, time, param,
@@ -974,8 +975,9 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                 ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
                 if param == 'nuc':
                     ax1.set_ylim([20,70])
-                    ax1.set_xlim([-2, 61])
+                    ax1.set_xlim([-2, 31])
                     ax1.set_yticks(np.arange(20, 71, step=10))
+                    ax1.set_xticks(np.arange(0, 31, step=10))
                 else:
                     ax1.set_ylim([-2,102])
                     ax1.set_yticks(np.arange(0, 101, step=25))
@@ -984,7 +986,7 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
     # ax1.set_ylim(-5,105)
     # ax1.set_xlim(-2,61)
 
-    ax1.set_xticks(np.arange(0, 61, step=15))
+                    ax1.set_xticks(np.arange(0, 61, step=15))
 
 
 
@@ -1009,10 +1011,10 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=.5)
     ax1.spines['right'].set_visible(False)
     ax1.spines['top'].set_visible(False)
-    ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
+    # ax1.legend(bbox_to_anchor=[1, 0.5], loc='best')
 
     if save_fig:
-        plt.savefig(save_fig+".pdf", dpi=300,bbox_inches='tight')
+        plt.savefig(save_fig+".png", dpi=300,bbox_inches='tight')
 
     plt.show()
 
