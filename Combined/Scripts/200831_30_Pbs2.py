@@ -1,26 +1,9 @@
-OUTPUT
-
-Filename: t200527_OM_60_Sho1exp
-Directory: C:\Users\sksuzuki\Documents\GitHub\HOG-branch-dynamics\Combined\Scripts/t200527_OM_60_Sho1exp
-Data file: t200527_OM_60_Sho1exp.txt
-
-
-
-
-
 #!/usr/bin/env python
 
 # Author: Kimiko Suzuki
 # Date: 181013
 # Notes: python35
 
-# 190805 -> fit to just ptpD data to force adaptation
-# 190806 -> run longer,
-# 190916 -> elim mutual inhib to see if model can capture data <- should be named M3 not M4
-# 190923 -> BUG FIX: set ptp inits to be the total (could have been above total)
-#        -> set lower bounds of ptps to be 10^-3 (from 10^-2)
-# 190924 -> remove percentage of PTPs (kept getting unstable solutions)
-#        -> fixed bug with loading hog1t100a data
 
 ###################################################################
 #IMPORT PACKAGES
@@ -38,7 +21,7 @@ import math
 # from itertools import product
 import pathlib
 import pandas as pd
-# import multiprocessing
+import multiprocessing
 # import sys
 # import pathlib
 
@@ -282,7 +265,7 @@ def run():
 def model(initials,t,total_protein,sig,params):
     Sho1, Hog1_AC, Hog1_AN, Hog1_IN, Glycerol = initials
     Sho1_tot, Hog1_tot, _ = total_protein
-    base_osmo, k2, K2, k4, K4, k6, K56, k7, K7, k8, K8, k9A, K9a, k9B, K9b, k10, K10, k11, K11, k12, k13, k14, k15 = params #23
+    base_osmo, k2, K2, k4, K4, k6, K56, k7, K7, k8, K8, k9A, K9a, k9B, K9b, k10, K10, k11, K11, k12, k13, k14, k15, K15 = params #23
 
     Hog1_IC = Hog1_tot - Hog1_AC - Hog1_AN - Hog1_IN
     Sho1_inactive = Sho1_tot - Sho1
@@ -291,9 +274,9 @@ def model(initials,t,total_protein,sig,params):
         Glycerol = 0
 
     dSho1 = (base_osmo + k2 * sig - Glycerol) * (Sho1_inactive) / (K2 + Sho1_inactive) - k4 * Sho1 / (K4 + Sho1)
-    dHog1_AC = (k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + (k9B - k15 * Hog1_AC) * Hog1_AN / (K9b + Hog1_AN)
-    dHog1_AN = k8 * Hog1_AC / (K8 + Hog1_AC) - (k9B - k15 * Hog1_AC) * Hog1_AN / (K9b + Hog1_AN) - k10 * Hog1_AN / (K10 + Hog1_AN)
-    dHog1_IN = k10 * Hog1_AN / (K10 + Hog1_AN) - k9A * Hog1_IN / (K9a + Hog1_IN) + k11 * Hog1_IC / (K11 + Hog1_IC)
+    dHog1_AC = (k6 * Sho1 + k14 * Hog1_AC) * Hog1_IC / (K56 + Hog1_IC) - k7 * Hog1_AC / (K7 + Hog1_AC) - k8 * Hog1_AC / (K8 + Hog1_AC) + (k9B ) * Hog1_AN / (K9b + Hog1_AN)
+    dHog1_AN = k8 * Hog1_AC / (K8 + Hog1_AC) - (k9B) * Hog1_AN / (K9b + Hog1_AN) - k10 * Hog1_AN / (K10 + Hog1_AN) + k15 * Hog1_IN / (K15 + Hog1_IN)
+    dHog1_IN = k10 * Hog1_AN / (K10 + Hog1_AN) - k9A * Hog1_IN / (K9a + Hog1_IN) + k11 * Hog1_IC / (K11 + Hog1_IC) - k15 * Hog1_IN / (K15 + Hog1_IN)
     dGlycerol = k12 * Hog1_AC - k13 * Glycerol
 
     return dSho1, dHog1_AC, dHog1_AN, dHog1_IN, dGlycerol
@@ -348,19 +331,26 @@ def scorefxn1(inits, total_protein, learned_params):
         mse_total += error_nuc
     return mse_total
 
+# FOR DOGWOOD
+def throw_away_function(_):
+    return run()
+
+def main():
+    pool=multiprocessing.Pool(processes=number_of_runs)
+    pool.map(throw_away_function, range(number_of_runs))
 
 if __name__ == '__main__':
-
     #base filename
-    save_filename = 't200527_OM_60_Sho1exp.txt'
+    save_filename = '200831_30_Pbs2.txt'
 
-    # Paths to longleaf data
-    # base_folder = '/nas/longleaf/home/rvdv/Prescaled_input/'
-    base_folder = 'C:/Users/sksuzuki/Downloads/Rozemarijn/Prescaled_input/'
+    # Paths
+    # base_folder = '../exp_data/Prescaled_input/'
+    base_folder='/nas/longleaf/home/sksuzuki/rvdv/Prescaled_input/'
     wt_phospho_folder = base_folder + 'WT_phospho'
-    wt_nuc_folder = base_folder + '60percent/WT_nuc'
+    wt_nuc_folder = base_folder + '30percent/WT_nuc'
 
     # Paths to local data
+    # base_folder = 'C:/Users/sksuzuki/Downloads/Rozemarijn/Prescaled_input/'
 #    base_folder = 'C:/Users/Rozemarijn/Documents/Universiteit/Masterstage2/Research/Modelling/Inputs/Prescaled_input/'
 #    wt_phospho_folder = base_folder + 'WT_phospho'
 #    wt_nuc_folder = base_folder + '90percent/WT_nuc'
@@ -387,13 +377,13 @@ if __name__ == '__main__':
     hog1_doses = [150, 350, 550]
 
     # Parameter ranges
-    number_of_params = 28
+
     minimums = [-8, 0, -8,
         0, -8,
         0, -8, -8, -8, -2,
         -4, 0, -4, -4, -4,
         -8, 0, -4, -4, 0,
-        -8, -8, -2
+        -8, -8, -4, -4
         ]
 
     maximums = [0, 8, 0,
@@ -401,11 +391,18 @@ if __name__ == '__main__':
         8, 0, 0, 0, 6,
         4, 8, 4, 4, 4,
         0, 8, 4, 4, 8,
-        0, 2, 6
+        0, 2, 4, 4
         ]
 
+    try:
+        len(minimums) == len(maximums)
+    except:
+        print('Min and max vecs are not the same length')
+
+    number_of_params = len(minimums)
+
     # EA params
-    number_of_runs = 5
+    number_of_runs = 50
     number_of_generations = 400
     number_of_individuals = 200
     mutation_rate = 0.2
@@ -414,4 +411,4 @@ if __name__ == '__main__':
     stripped_name, dir_to_use = make_dirs(save_filename)
     arr_conversion_matrix = make_conversion_matrix(number_of_params, maximums, minimums)
 
-    run()
+    main()
