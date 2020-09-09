@@ -616,7 +616,7 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
     ax1.plot(AN+AC, AN+IN,  m, color = palette.get(sig),mec='black' )
 
 
-    ax1.set_ylim(19,61)
+    ax1.set_ylim(19,91)
     # ax1.set_ylim(-5,105)
 
     # ax1.set_xlim(-1,31)

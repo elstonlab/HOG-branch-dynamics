@@ -107,6 +107,7 @@ def plt_param_behaviors(model_fxns, top_params, plt_top, params_constants, initi
     # ax2.legend(title='Inactive', loc='best')
     ax1.grid(color='grey', linestyle='-', axis='y', linewidth=1)
     ax2.grid(color='grey', linestyle='-', axis='y', linewidth=1)
+    # ax1.set_ylim([20,92])
 
 
     if plt_bad:
@@ -450,11 +451,11 @@ def plt_param_cis(model_fxns, top_params, params_constants, initials,  doses, ti
                     mark = 'o'
                 ax1.plot(exp_time, data, marker=mark, markersize=6, linestyle="-", color=palette.get(sig), fillstyle='full', mec='black', label = str(int(sig)))#, fillstyle=fill, linestyle="None"), palette.get(sig), mec='black' (outside edge)
                 if param == 'nuc':
-                    ax1.set_ylim([22,31])
-                    ax1.set_xlim([-2, 61])
+                    # ax1.set_ylim([22,31])
+                    # ax1.set_xlim([-2, 61])
                     ax1.set_yticks(np.arange(22, 32, step=2))
                 else:
-                    ax1.set_ylim([-2,102])
+                    # ax1.set_ylim([-2,102])
                     ax1.set_yticks(np.arange(0, 101, step=25))
 
 
@@ -602,16 +603,21 @@ def plt_nuc_vs_cyto(model_fxns, top_params, params_constants, initials,  sig, ti
         m = 'o'
     elif sig ==550:
         m = 's'
+        print((AN+IN)[2]-(AN+IN)[4])
     else:
         m = 'o'
     ax1.plot(AN+AC, AN+IN,  m, color = palette.get(sig),mec='black' )
 
+    # ax1.set_ylim(22,31)
+    ax1.set_ylim(19,61)
+    # ax1.set_ylim(19,91)
 
-    # ax1.set_ylim(22,29.5)
-    ax1.set_ylim(-5,105)
 
-    # ax1.set_yticks(np.arange(22, 29.5, step=2))
-    ax1.set_yticks(np.arange(0, 101, step=25))
+
+    # ax1.set_yticks(np.arange(22, 31, step=2))
+    ax1.set_yticks(np.arange(20, 61, step=10))
+    # ax1.set_yticks(np.arange(20, 91, step=10))
+
 
     # ax1.set_xlim(-1,31)
     ax1.set_xlim(-1,102)
